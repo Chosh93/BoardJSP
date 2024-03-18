@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+	<mapper namespace="boardMapper">
+		<!-- 게시판 목록  -->
+  		<select id="board" resultType="boardVo">
+			SELECT 
+				BNUM,
+				BTITLE,
+				BWRITER,
+				TO_CHAR(BDATE, 'yyyy-MM-dd HH24:mi:ss') AS BDATE
+			FROM 
+				TEST.BOARD
+			WHERE
+				IS_DEL = 'N'
+			ORDER BY 
+				BNUM DESC
+		</select>
+		
+		<!-- 게시판 작성  -->
+		<insert id="write" parameterType="boardVo">
+			INSERT INTO TEST.BOARD (BNUM, BTITLE, BWRITER, BCONTENTS, BDATE)
+			VALUES (
+			    TEST.board_seq.NEXTVAL,
+			    #{btitle},
+			    #{bwriter},
+			    #{bcontents},
+			    SYSDATE
+			)
+		</insert>
+		
+		<!-- 게시판 상세정보  -->
+		<select id="detail" resultType="boardVo">
+			SELECT
+				BNUM,
+				BTITLE,
+				BWRITER,
+				BCONTENTS
+			 FROM 
+			 	TEST.BOARD 
+			 WHERE
+			 	BNUM = #{bnum}
+		</select>
+		
+		<!-- 게시판 삭제 -->
+		<update id="delete">
+			UPDATE TEST.BOARD
+			SET
+				IS_DEL = 'Y'
+			WHERE BNUM = #{bnum}
+		</update>
+		
+		<!-- 게시판 수정 -->
+		<update id="update">
+			UPDATE TEST.BOARD
+			SET
+			    BTITLE = #{btitle},
+			    BWRITER = #{bwriter},
+			    BCONTENTS = #{bcontents}
+			WHERE
+			    BNUM = #{bnum}
+		</update>
+	</mapper>
