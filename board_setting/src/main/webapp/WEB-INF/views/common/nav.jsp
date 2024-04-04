@@ -18,6 +18,7 @@
 		</ul>
 	</li>
 	<li role="presentation" class="calc"><a href="/calc">계산기</a></li>
+	<li role="presentation" class="calendar"><a href="/calendar">캘린더</a></li>
 </ul>
 <script>
 $(document).ready(function() {
@@ -27,11 +28,17 @@ $(document).ready(function() {
 	// 해당 페이지에 맞는 네비게이션바 강조 옵션 적용
 	if(loc.indexOf("board") > -1){
 		$(".board").addClass("active");
-	}else if(loc.indexOf("test") > -1){
+	}
+	else if(loc.indexOf("test") > -1){
 		$(".test").addClass("active");
-	}else if(loc.indexOf("calc") > -1){
+	}
+	else if(loc.indexOf("calc") > -1){
 		$(".calc").addClass("active");
-	}else if(loc === ""){
+	}
+	else if(loc.indexOf("calendar") > -1){
+		$(".calendar").addClass("active");
+	}
+	else if(loc === ""){
 		$(".home").addClass("active");
 	}
 });

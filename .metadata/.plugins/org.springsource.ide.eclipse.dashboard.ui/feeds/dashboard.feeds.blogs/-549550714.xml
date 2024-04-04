@@ -1,415 +1,692 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Spring]]></title><description><![CDATA[Level up your Java code and explore what Spring can do for you.]]></description><link>https://spring.io</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 10 Mar 2024 12:46:08 GMT</lastBuildDate><item><title><![CDATA[A Bootiful Podcast: Cristian Schuszter on CERN]]></title><link>https://spring.io/blog/2024/03/07/a-bootiful-podcast-cristian-schuszter-on-cern</link><guid isPermaLink="true">https://spring.io/blog/2024/03/07/a-bootiful-podcast-cristian-schuszter-on-cern</guid><dc:creator><![CDATA[Josh Long]]></dc:creator><pubDate>Thu, 07 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring fans! In this installment I talk to Cristian Schuszter, a software engineer at CERN. (This episode was recorded live at VOXXED DAYS CERN!).&lt;/p&gt;
-&lt;p&gt;Don&apos;t forget to help us out with the &lt;a href=&quot;https://dimensionalresearch.co1.qualtrics.com/jfe/form/SV_eL0aSP7GSnporTE&quot;&gt;State of Spring Survey&lt;/a&gt;&lt;/p&gt;
-&lt;iframe title=&quot;Cristian Schuszter on CERN&quot; allowtransparency=&quot;true&quot; height=&quot;150&quot; width=&quot;100%&quot; style=&quot;border: none; min-width: min(100%, 430px);height:150px;&quot; scrolling=&quot;no&quot; data-name=&quot;pb-iframe-player&quot; src=&quot;https://www.podbean.com/player-v2/?i=y3td2-15a3291-pb&amp;from=pb6admin&amp;share=1&amp;download=1&amp;rtl=0&amp;fonts=Arial&amp;skin=1&amp;font-color=&amp;logo_link=episode_page&amp;btn-skin=7&quot; loading=&quot;lazy&quot;&gt;&lt;/iframe&gt;</content:encoded></item><item><title><![CDATA[Function Calling in Java and Spring AI using the latest Mistral AI API]]></title><link>https://spring.io/blog/2024/03/06/function-calling-in-java-and-spring-ai-using-the-latest-mistral-ai-api</link><guid isPermaLink="true">https://spring.io/blog/2024/03/06/function-calling-in-java-and-spring-ai-using-the-latest-mistral-ai-api</guid><dc:creator><![CDATA[Christian Tzolov]]></dc:creator><pubDate>Wed, 06 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Mistral AI, a leading developer of open-source large language models, &lt;a href=&quot;https://docs.mistral.ai/guides/function-calling/&quot;&gt;unveiled&lt;/a&gt; the addition of &lt;strong&gt;Function Calling&lt;/strong&gt; support to its cutting-edge models.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Function Calling&lt;/strong&gt; is a feature that facilitates the integration of LLM with external tools and APIs.
-It enables the language model to request the execution of client-side functions, allowing it to access necessary run-time information or perform tasks dynamically.?&lt;/p&gt;
-&lt;p&gt;Here, I&apos;ll discuss using Mistral AI&apos;s new Function Calling features with Java and particularly with &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/0.8-SNAPSHOT/index.html&quot;&gt;Spring AI&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;If you&apos;re not keen on delving into the details of the low-level Java client and want to make the most of your investment, feel free to skip the next paragraph and jump straight into the &lt;a href=&quot;#fc-with-spring-ai&quot;&gt;Function Calling with Spring AI&lt;/a&gt;.&lt;/p&gt;
-&lt;h1 id=&quot;1-function-calling-in-java&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#1-function-calling-in-java&quot; aria-label=&quot;1 function calling in java permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;1. Function Calling in Java&lt;/h1&gt;
-&lt;p&gt;If you want to test out the latest Mistral AI features using Java and &lt;a href=&quot;https://docs.spring.io/spring-ai/reference/0.8-SNAPSHOT/index.html&quot;&gt;Spring AI&lt;/a&gt;, you will find that Mistral doesn&apos;t support Java clients and hasn&apos;t released the Function Calling API yet.&lt;/p&gt;
-&lt;p&gt;Consequently, I had to resort exploring their JavaScript/Python clients to to figure it out.
-Below, is a class diagram illustrating the various components of the API and their interconnections.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;//images.ctfassets.net/mnrwi97vnhts/15QfGErEgkazUvnOcAb3xz/1b6ccac2b033bafe75578fa1574cd63b/Spring_AI__11_.jpg&quot; alt=&quot;Mistral AI Class Diagram 1&quot;&gt;&lt;/p&gt;
-&lt;p&gt;Those familiar with the OpenAI API will notice that Mistral AI&apos;s new API is almost the same, with just a few small differences.
-However, there&apos;s one important limitation: At the time of writing this blog, &lt;strong&gt;Mistral AI does not support parallel function calls&lt;/strong&gt;, setting it apart from the latest LLM models offered by OpenAI, Azure OpenAI, and Vertex AI Gemini.&lt;/p&gt;
-&lt;p&gt;I&apos;ve extended the &lt;a href=&quot;https://github.com/spring-projects/spring-ai/blob/main/models/spring-ai-mistral-ai/src/main/java/org/springframework/ai/mistralai/api/MistralAiApi.java&quot;&gt;MistralAiApi&lt;/a&gt;  Java client, originally created by Ricken Bazolo, to include the missing Function Calling features.
-The updated client works well, as demonstrated by the &lt;a href=&quot;https://github.com/spring-projects/spring-ai/blob/main/models/spring-ai-mistral-ai/src/test/java/org/springframework/ai/mistralai/api/tool/PaymentStatusFunctionCallingIT.java&quot;&gt;Payment Status demo&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Since my focus is on Spring AI, I won&apos;t delve into the technical intricacies of the client here. However, if you&apos;re interested, you can explore the demo code and the cheat sheet diagram I&apos;ve included below.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;//images.ctfassets.net/mnrwi97vnhts/20ZVq46V0ANAOaDGB72X2d/6c173d646298cff448d80caa887a9bcb/Spring_AI__33_.jpg&quot; alt=&quot;Mistral AI Function Calling Flow Diagram - 3&quot;&gt;&lt;/p&gt;
-&lt;p&gt;It&apos;s important to note that the model doesn&apos;t directly call the function; rather, it generates JSON for you to call the function in your code and return the result to the model to continue the conversation.&lt;/p&gt;
-&lt;h1 id=&quot;a-namefc-with-spring-ai2-function-calling-with-spring-aia&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#a-namefc-with-spring-ai2-function-calling-with-spring-aia&quot; aria-label=&quot;a namefc with spring ai2 function calling with spring aia permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;&lt;a name=&quot;fc-with-spring-ai&quot;&gt;2. Function Calling with Spring AI&lt;/a&gt;&lt;/h1&gt;
-&lt;p&gt;Spring AI simplifies Function Calling by allowing you to define a &lt;code&gt;@Bean&lt;/code&gt; that returns a user-defined &lt;code&gt;java.util.Function&lt;/code&gt;. It automatically infers the Function＊s input type and generates JSON (or Open API) schema accordingly. Moreover, Spring AI takes care of the complex interactions with the AI Model by wrapping your POJO (the function) with the necessary adapter code, eliminating the need for you to write repetitive code.&lt;/p&gt;
-&lt;p&gt;Furthermore, the Spring AI simplifies the code portability to other AI models that support Function Calling and allows the development of efficient, native (GraalVM) executables.&lt;/p&gt;
-&lt;h2 id=&quot;21-how-does-it-work&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#21-how-does-it-work&quot; aria-label=&quot;21 how does it work permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;2.1 How does it work?&lt;/h2&gt;
-&lt;p&gt;Suppose we want the AI model to respond with information that it does not have.
-For example the status of your recent payment transactions as shown in this Mistral AI &lt;a href=&quot;https://docs.mistral.ai/guides/function-calling&quot;&gt;tutorial&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Lets re-implement the tutorial with Spring AI.&lt;/p&gt;
-&lt;p&gt;Bootstrap a new Boot application using the &lt;a href=&quot;https://start.spring.io&quot;&gt;Initializr&lt;/a&gt; and add the MistralAI boot starter dependency to the POM:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;dependency&gt;
-    &amp;#x3C;groupId&gt;org.springframework.ai&amp;#x3C;/groupId&gt;
-    &amp;#x3C;artifactId&gt;spring-ai-mistral-ai-spring-boot-starter&amp;#x3C;/artifactId&gt;
-    &amp;#x3C;version&gt;0.8.1-SNAPSHOT&amp;#x3C;/version&gt;
-&amp;#x3C;/dependency&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Use the &lt;code&gt;application.properties&lt;/code&gt; to configure it:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;spring.ai.mistralai.api-key=${MISTRAL_AI_API_KEY}
-spring.ai.mistralai.chat.options.model=mistral-small-latest
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;This will provide you with fully functional &lt;code&gt;MistralAiChatClient&lt;/code&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@Autowired
-MistralAiChatClient chatClient;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Next let＊s assume we have a dataset consisting of payment transactions:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;public record Transaction(String transactionId) {}
-
-public record Status(String status) {}
-
-public static final Map&amp;#x3C;Transaction, Status&gt; PAYMENT_DATA = Map.of(
-            new Transaction(&quot;T1001&quot;), new Status(&quot;Paid&quot;),
-            new Transaction(&quot;T1002&quot;), new Status(&quot;Unpaid&quot;),
-            new Transaction(&quot;T1003&quot;), new Status(&quot;Paid&quot;),
-            new Transaction(&quot;T1004&quot;), new Status(&quot;Paid&quot;),
-            new Transaction(&quot;T1005&quot;), new Status(&quot;Pending&quot;));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Users can ask questions about this dataset and use function calling to answer them.
-For example, let＊s consider a function that retrieves the payment status given a transaction:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@Bean
-@Description(&quot;Get payment status of a transaction&quot;)
-public Function&amp;#x3C;Transaction, Status&gt; retrievePaymentStatus() {
-        return (transaction) -&gt; new Status(PAYMENT_DATA.get(transaction).status());
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;It uses a plain &lt;code&gt;java.util.Function&lt;/code&gt; that takes a &lt;code&gt;Transaction&lt;/code&gt; as an input and returns the &lt;code&gt;Status&lt;/code&gt; for that transaction.
-Function is registered as &lt;code&gt;@Bean&lt;/code&gt; and uses the &lt;code&gt;@Description&lt;/code&gt; annotation to define function description.
-Spring AI greatly simplifies code you need to write to support function invocation.
-It brokers the function invocation conversation for you.
-You can also reference multiple function bean names in your prompt.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;var options = MistralAiChatOptions.builder()
-   .withFunction(&quot;retrievePaymentStatus&quot;)
-   .build();
-
-ChatResponse paymentStatusResponse = chatClient.call(
-      new Prompt(&quot;What&apos;s the status of my transaction with id T1005?&quot;,  options);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We formulate the question within the prompt, including the associated function name in the prompt&apos;s options.
-The function name should match the Bean name.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;TIP&lt;/strong&gt;: Rather than repeatedly specifying the function name in prompt options for each request, you can consider configuring it once in the &lt;code&gt;application.properties&lt;/code&gt; file like: &lt;code&gt;spring.ai.mistralai.chat.options.functions=retrievePaymentStatus&lt;/code&gt;. This approach ensures the function is consistently enabled and accessible for all prompt questions. However, it&apos;s important to note that this method may result in the transmission of unnecessary context tokens for requests that do not require the function.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;That＊s it.
-Spring AI will facilitate the conversation for function invocation on your behalf.
-You can print the response content:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;System.out.println(paymentStatusResponse.getResult().getOutput().getContent());
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;and expect a result like this:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;The status of your transaction T1005 is &quot;Pending&quot;.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;TIP&lt;/strong&gt;: Check the &lt;strong&gt;&lt;a href=&quot;https://github.com/tzolov/spring-ai-aot-tests/tree/main/mistralai-aot-demo&quot;&gt;MistralAi-AOT-Demo&lt;/a&gt;&lt;/strong&gt;, a simple, Spring Boot application showcasing the integration of Mistral AI with Spring AI. It encompasses various functionalities such as chat completion, streaming chat completion, embedding, and function calling. Additionally, instructions for native builds are included.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Explore further details about the integration of Spring AI with Mistral AI in the reference documentation:&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Spring]]></title><description><![CDATA[Level up your Java code and explore what Spring can do for you.]]></description><link>https://spring.io</link><generator>GatsbyJS</generator><lastBuildDate>Thu, 04 Apr 2024 00:26:48 GMT</lastBuildDate><item><title><![CDATA[Spring Functions Catalog 5.0.0?M2 & Spring Cloud Stream Applications 2024.0.0-M1 Available]]></title><link>https://spring.io/blog/2024/04/03/spring-functions-catalog-5-0-0-m2-and-spring-cloud-stream-applications-2024</link><guid isPermaLink="true">https://spring.io/blog/2024/04/03/spring-functions-catalog-5-0-0-m2-and-spring-cloud-stream-applications-2024</guid><dc:creator><![CDATA[Corneil du Plessis]]></dc:creator><pubDate>Wed, 03 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the team and everyone who has contributed, I＊m happy to announce that Spring Functions Catalog &lt;code&gt;5.0.0-M2&lt;/code&gt; and Spring Cloud Stream Applications &lt;code&gt;2024.0.0-M1&lt;/code&gt; has been released and is now available from &lt;a href=&quot;https://repo.spring.io/milestone&quot;&gt;Spring Milestone Repo&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This release updates all of the applications to use Spring Functions Catalog.
+Release notes are available:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/0.8-SNAPSHOT/api/clients/mistralai-chat.html&quot;&gt;Mistral AI Chat Client&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/0.8-SNAPSHOT/api/clients/functions/mistralai-chat-functions.html&quot;&gt;Mistral AI Function Calling&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-cloud/spring-functions-catalog/releases/tag/v5.0.0-M2&quot;&gt;Spring Functions Catalog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-cloud/stream-applications/releases/tag/v2024.0.0-M1&quot;&gt;Stream Applications&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&quot;22-dynamic-prompt-options&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#22-dynamic-prompt-options&quot; aria-label=&quot;22 dynamic prompt options permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;2.2 Dynamic Prompt Options&lt;/h2&gt;
-&lt;p&gt;With &lt;strong&gt;MistralAiChatOptions&lt;/strong&gt;, we can customize the default settings for each prompt request. For instance, we can switch the model to LARGE and adjust the temperature for a specific request as needed.:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;ChatResponse paymentStatusResponse = chatClient
-   .call(new Prompt(&quot;What&apos;s the status of my transaction with id T1005?&quot;,
-            MistralAiChatOptions.builder()
-               .withModel(MistralAiApi.ChatModel.LARGE.getValue())
-               .withTemperature(0.6f)
-               .withFunction(&quot;retrievePaymentStatus&quot;)
-               .build()));
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Check the &lt;a href=&quot;https://github.com/spring-projects/spring-ai/blob/main/models/spring-ai-mistral-ai/src/main/java/org/springframework/ai/mistralai/MistralAiChatOptions.java&quot;&gt;MistralAiChatOptions&lt;/a&gt; javadocs for the available options.&lt;/p&gt;
-&lt;h2 id=&quot;23-code-portability&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#23-code-portability&quot; aria-label=&quot;23 code portability permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;2.3 Code Portability&lt;/h2&gt;
-&lt;p&gt;Porting the code to other models supporting function calling is straightforward. For instance, to transition the code from using Mistral AI to Azure OpenAI, follow these steps:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;Replace the &lt;code&gt;spring-ai-mistral-ai-spring-boot-starter&lt;/code&gt; dependency with &lt;code&gt;spring-ai-azure-openai-spring-boot-starter&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;Adjust the &lt;code&gt;application.properties&lt;/code&gt; file:
-&lt;pre&gt;&lt;code&gt;spring.ai.azure.openai.api-key=${AZURE_OPENAI_API_KEY}
-spring.ai.azure.openai.endpoint=${AZURE_OPENAI_ENDPOINT}
-spring.ai.azure.openai.chat.options.model=gpt-35-turbo
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;Rename the &lt;code&gt;MistralAiChatOptions&lt;/code&gt; class to &lt;code&gt;AzureOpenAiChatOptions&lt;/code&gt; (this renaming may become unnecessary in future Spring AI versions).&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Currently, Spring AI offers function calling code portability between the following platforms:&lt;/p&gt;
+&lt;p&gt;We welcome feedback and contributions, so please reach out to us on &lt;a href=&quot;https://stackoverflow.com/questions/tagged/spring-cloud-dataflow&quot;&gt;Stackoverflow&lt;/a&gt; or &lt;a href=&quot;https://github.com/spring-cloud/spring-functions-catalog/issues&quot;&gt;Spring Functions Catalog - GitHub&lt;/a&gt; or &lt;a href=&quot;https://github.com/spring-cloud/stream-applications/issues&quot;&gt;Stream Applications - GitHub&lt;/a&gt;.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Tips: Hello, Java 22!]]></title><link>https://spring.io/blog/2024/04/03/spring-tips-hello-java-22</link><guid isPermaLink="true">https://spring.io/blog/2024/04/03/spring-tips-hello-java-22</guid><dc:creator><![CDATA[Josh Long]]></dc:creator><pubDate>Wed, 03 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring fana! In this installment, I look at the amazing, just-released, Java 22!&lt;/p&gt;
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/X_kKfNko3hA?si=honzrsbpgpw0E8Gj&quot; title=&quot;YouTube video player&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&quot; referrerpolicy=&quot;strict-origin-when-cross-origin&quot; allowfullscreen&gt;&lt;/iframe&gt;</content:encoded></item><item><title><![CDATA[This Week in Spring - April 2nd, 2024]]></title><link>https://spring.io/blog/2024/04/03/this-week-in-spring-april-2nd-2024</link><guid isPermaLink="true">https://spring.io/blog/2024/04/03/this-week-in-spring-april-2nd-2024</guid><dc:creator><![CDATA[Josh Long]]></dc:creator><pubDate>Wed, 03 Apr 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Welcome, welcome, &lt;em&gt;welcome&lt;/em&gt;, to another installment of &lt;em&gt;This Week in Spring&lt;/em&gt;! You know, we&apos;ve come a long way since you and I last spoke. It&apos;s &lt;em&gt;April&lt;/em&gt; already! A new month! How bizarre. And, with the dawning of a new month, we&apos;re also more than 25% through this year! I sure hope you&apos;re paying attention. That little tidbit&apos;s blowing my mind!&lt;/p&gt;
+&lt;p&gt;Yesterday, by the way, was the first of April, and the tenth birthday of the first generally available 1.0 version of Spring Boot, released on the 1st of April, 2024. &lt;strong&gt;Happy birthday, Spring Boot!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Tomorrow, by the way, I&apos;ll have a brand new not-to-be-missed video on &lt;a href=&quot;https://spring.io/blog/2024/03/19/hello-java-22&quot;&gt;Java 22&lt;/a&gt; over on our humble YouTube channel, &lt;a href=&quot;https://youtube.com/@springsourcedev&quot;&gt;do &lt;em&gt;not&lt;/em&gt; miss that&lt;/a&gt;!&lt;/p&gt;
+&lt;p&gt;Alrighty, my friends, we&apos;ve got a ton to get through (and I&apos;ve already put a few things on your plate for tomorrow...), so let&apos;s dive into it!&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/0.8-SNAPSHOT/api/clients/functions/openai-chat-functions.html&quot;&gt;Spring AI Open AI&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/0.8-SNAPSHOT/api/clients/functions/vertexai-gemini-chat-functions.html&quot;&gt;Spring AI Vertex AI Gemini&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/0.8-SNAPSHOT/api/clients/functions/azure-open-ai-chat-functions.html&quot;&gt;Spring AI Azure OpenAI&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-ai/reference/0.8-SNAPSHOT/api/clients/functions/mistralai-chat-functions.html&quot;&gt;Spring AI Mistral AI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;SpringOne is back! Save the date! We&apos;ll be there, in Las Vegas, from August 26th to 29th, 2024. &lt;a href=&quot;https://springone.io&quot;&gt;We&apos;d love to see you there! And, we&apos;d love it if you submitted a talk!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;I dig this &lt;em&gt;Javarevisited&lt;/em&gt; blog (paywalled, alas..) which looks &lt;a href=&quot;https://medium.com/javarevisited/tracing-in-spring-boot3-097205dc08f4&quot;&gt;at distributed tracing in a Spring Boot application&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Check out the discussion over on Software Engineering Daily with the Spring team&apos;s &lt;a href=&quot;https://twitter.com/VMwareTanzu/status/1773787468141150491?s=12&amp;#x26;t=n-UflcIbnx1lage-TBk0Cg&quot;&gt;Ryan Morgan and Dr. Mark Pollack where they talk about Spring AI&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Speaking of Spring AI, want to learn more about it? Check out our new Spring Academy course on &lt;a href=&quot;https://spring.academy/guides/spring-ai&quot;&gt;&lt;em&gt;Spring AI&lt;/em&gt;&lt;/a&gt; by Spring legends Craig Walls (author of &lt;em&gt;Spring in Action&lt;/em&gt;, no less!) and Rob McNees!&lt;/li&gt;
+&lt;li&gt;I love Anthony Ikeda&apos;s awesome look &lt;a href=&quot;https://dev.to/anthonyikeda/getting-started-with-spring-ai-4j09&quot;&gt;at getting started with Spring AI&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Former InfoQ editor-in-chief and all-around amazing author Charles Humble has a fantastic write-up over on &lt;em&gt;The New Stack&lt;/em&gt;: &lt;a href=&quot;https://thenewstack.io/how-spring-and-java-shaped-internal-developer-platforms/&quot;&gt;&quot;How Spring and Java Shaped Internal Developer Platforms&quot;&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Also speaking of Spring AI, did you know that &lt;a href=&quot;https://twitter.com/eddumelendez/status/1772672905870020913?s=12&amp;#x26;t=n-UflcIbnx1lage-TBk0Cg&quot;&gt;Spring AI will soon sport some service connections in Spring Boot, allowing seamless integration with Testcontainers&lt;/a&gt;?&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/03/28/spring-cloud-2023-0-1-aka-leyton-has-been-released&quot;&gt;Spring Cloud 2023.0.1 (aka Leyton) Has Been Released&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/03/28/spring-for-graphql-1-2-6-released&quot;&gt;Spring for GraphQL 1.2.6 Released&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;In last week&apos;s installment of &lt;em&gt;Spring Tips&lt;/em&gt;, I looked at the &lt;a href=&quot;https://www.youtube.com/watch?v=e9POHS0BjEg&amp;#x26;t=23s&quot;&gt;amazing Jobrunr distributed job scheduler&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;In last week&apos;s installment of &lt;em&gt;A Bootiful Podcast&lt;/em&gt;, I talked to Joseph Ottinger and Andrew Lombardi about &lt;a href=&quot;https://spring.io/blog/2024/03/28/a-bootiful-podcast-joseph-ottinger-and-andrew-lombardi-on-beginning-spring-6&quot;&gt;their new, and awesome, book &lt;em&gt;Beginning Spring 6&lt;/em&gt;&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Spring Cloud 2023.0.1 (aka Leyton) Has Been Released]]></title><link>https://spring.io/blog/2024/03/28/spring-cloud-2023-0-1-aka-leyton-has-been-released</link><guid isPermaLink="true">https://spring.io/blog/2024/03/28/spring-cloud-2023-0-1-aka-leyton-has-been-released</guid><dc:creator><![CDATA[Ryan Baxter]]></dc:creator><pubDate>Thu, 28 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the community, I am pleased to announce that the General Availability (RELEASE) of the &lt;a href=&quot;https://cloud.spring.io&quot;&gt;Spring Cloud 2023.0.1&lt;/a&gt; Release Train is available today. The release can be found in &lt;a href=&quot;https://repo1.maven.org/maven2/org/springframework/cloud/spring-cloud-dependencies/2023.0.1/&quot;&gt;Maven Central&lt;/a&gt;. You can check out the 2023.0.1 &lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-release/wiki/Spring-Cloud-2023.0.1-Release-Notes&quot;&gt;release notes for more information&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;notable-changes-in-the-202301-release-train&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#notable-changes-in-the-202301-release-train&quot; aria-label=&quot;notable changes in the 202301 release train permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Notable Changes in the 2023.0.1 Release Train&lt;/h2&gt;
+&lt;p&gt;Based on Spring Boot 3.2.4.&lt;/p&gt;
+&lt;p&gt;See &lt;a href=&quot;https://github.com/orgs/spring-cloud/projects/136&quot;&gt;the GitHub project&lt;/a&gt; for all changes made in this release.&lt;/p&gt;
+&lt;h3 id=&quot;spring-cloud-kubernetes&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-kubernetes&quot; aria-label=&quot;spring cloud kubernetes permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Kubernetes&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Add support for selective namespaces in Fabric8 LoadBalancer implementation (&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-kubernetes/pull/1604&quot;&gt;#1604&lt;/a&gt;)&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;The &lt;a href=&quot;https://github.com/tzolov/spring-ai-function-calling-portability&quot;&gt;Spring-AI-Function-Calling-Portability&lt;/a&gt; sample application, demonstrates how you can re-use the same code and the same functions across multiple AI models.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;: At the moment Mistral AI does not provide parallel function calling support.&lt;/p&gt;
-&lt;h1 id=&quot;3-build-native-graalvm-execution&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#3-build-native-graalvm-execution&quot; aria-label=&quot;3 build native graalvm execution permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;3. Build Native (GraalVM) Execution&lt;/h1&gt;
-&lt;p&gt;For building a native image you need to install a &lt;a href=&quot;https://www.graalvm.org/downloads/&quot;&gt;GrallVM 21 JDK&lt;/a&gt; and runt the following maven command:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;./mvnw clean install -Pnative native:compile
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;It may take a couple of minutes to complete.
-Then you can run the native executable:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;./target/mistralai-aot-demo
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h1 id=&quot;4-conclusions&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#4-conclusions&quot; aria-label=&quot;4 conclusions permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;4. Conclusions&lt;/h1&gt;
-&lt;p&gt;In this blog post we explore the Mistral AI Function Calling features in conjunction with Java and Spring AI.&lt;/p&gt;
-&lt;p&gt;The focus is on leveraging Function Calling with Spring AI, a framework that streamlines the integration process by handling the complexities of interaction with AI models, facilitating code portability and the development of efficient, native (GraalVM) executables.&lt;/p&gt;
-&lt;p&gt;Key points covered include:&lt;/p&gt;
+&lt;h3 id=&quot;spring-cloud-function&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-function&quot; aria-label=&quot;spring cloud function permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Function&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;Overview of Function Calling with Spring AI, including demos and code examples.&lt;/li&gt;
-&lt;li&gt;Explain the dynamic Prompt Options and Code Portability across different AI models supported by Spring AI.&lt;/li&gt;
-&lt;li&gt;Building Native (GraalVM) Execution for enhanced performance&lt;/li&gt;
+&lt;li&gt;Added native support for deploying and processing WEB Workloads as AWS Lambda with sample provided &lt;a href=&quot;https://github.com/aws/serverless-java-container/tree/main/samples/springboot3/pet-store-native&quot;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Fixed filter registration in WEB support for AWS Lambda&lt;/li&gt;
+&lt;li&gt;Fixed SNapStart processing in WEB support for AWS Lambda&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;The blog provides links to relevant documentation and demos, offering readers further exploration into Function Calling capabilities and code portability across different language model providers.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Tips: the Spring Authorization Server: durability of data]]></title><link>https://spring.io/blog/2024/03/06/spring-tips-the-spring-authorization-server-durability-of-data</link><guid isPermaLink="true">https://spring.io/blog/2024/03/06/spring-tips-the-spring-authorization-server-durability-of-data</guid><dc:creator><![CDATA[Josh Long]]></dc:creator><pubDate>Wed, 06 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring fans! In this installment, we continue our look at the venerable Spring Authorization Server, this time looking at how to configure persistence and durability for various aspects of the system&lt;/p&gt;
-&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/GVsKQ4dp_pQ?si=6_sbwp8qKn-ZLo9o&quot; title=&quot;YouTube video player&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&quot; allowfullscreen&gt;&lt;/iframe&gt;</content:encoded></item><item><title><![CDATA[The State of Spring Survey Is Back!]]></title><link>https://spring.io/blog/2024/03/05/the-state-of-spring-survey-is-back</link><guid isPermaLink="true">https://spring.io/blog/2024/03/05/the-state-of-spring-survey-is-back</guid><dc:creator><![CDATA[Michael Minella]]></dc:creator><pubDate>Tue, 05 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;We are excited to announce the State of Spring Survey! Make sure your voice is heard by heading over to &lt;a href=&quot;https://spring.io/survey&quot; title=&quot;State of Spring Survey&quot;&gt;https://spring.io/survey&lt;/a&gt; and give us your feedback!&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Are you excited to use virtual threads? Is AI all hype or is it game changing? What would you change about Spring if you could? (&lt;a href=&quot;https://github.com/spring-projects/spring-boot/blob/main/CONTRIBUTING.adoc&quot;&gt;You can&lt;/a&gt;, by the way.)&lt;/p&gt;
-&lt;p&gt;The State of Spring survey is back! Last time we learned that 90% of respondents were looking forward to virtual threads through Project Loom. We learned that building APIs was still the main use case for Spring applications, with plain JSON over HTTP as the number one type of API. We also learned that native compilation with GraalVM was beginning to cool off a bit from its high point in popularity. What will we learn this year?&lt;/p&gt;
-&lt;p&gt;We are excited to hear from you, our community, on what matters in your use of Spring. Completing the survey should take about 15 minutes. If you want to be among the first to get the report, feel free to leave your email at the end of the survey.&lt;/p&gt;
-&lt;p&gt;Finally, we would like to ask for your help. We want to be sure as many members of the community as possible are heard. Please share the link &lt;a href=&quot;https://spring.io/survey&quot; title=&quot;State of Spring Survey&quot;&gt;https://spring.io/survey&lt;/a&gt; or our &lt;a href=&quot;https://twitter.com/springcentral/status/1765075456674631831&quot;&gt;Twitter/X&lt;/a&gt; and &lt;a href=&quot;https://www.linkedin.com/feed/update/urn:li:activity:7170842814371602434?utm_source=share&amp;#x26;utm_medium=member_desktop&quot;&gt;LinkedIn&lt;/a&gt; posts.&lt;/p&gt;
-&lt;p&gt;Thank you!&lt;/p&gt;
-&lt;p&gt;The Spring Team&lt;/p&gt;</content:encoded></item><item><title><![CDATA[This Week in Spring - March 5th, 2024]]></title><link>https://spring.io/blog/2024/03/05/this-week-in-spring-march-5th-2024</link><guid isPermaLink="true">https://spring.io/blog/2024/03/05/this-week-in-spring-march-5th-2024</guid><dc:creator><![CDATA[Josh Long]]></dc:creator><pubDate>Tue, 05 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring fans! Welcome to another exciting roundup of &lt;em&gt;This Week in Spring&lt;/em&gt;! I expect many of you are reading this for the first time, especially with Facebook and Instagram being down. People have been exploring all the other lesser-known corners of the web, looking for their daily &quot;doom scroll.&quot; Well, you won&apos;t find that here, no way, no how! There are no memes here. Well, not often, anyway. No, this is a place for personal growth, reflection, and contemplation on the latest and greatest in the wild and wonderful world of Spring.&lt;/p&gt;
+&lt;h3 id=&quot;spring-cloud-openfeign&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-openfeign&quot; aria-label=&quot;spring cloud openfeign permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Openfeign&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;I did an article for The New Stack looking at the New Relic Developer Survey report: &lt;a href=&quot;https://thenewstack.io/we-can-have-nice-things-upgrading-to-java-21-is-worth-it/&quot;&gt;We &lt;em&gt;Can&lt;/em&gt; Have Nice Things&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Our very own Jason Konicki has a &lt;a href=&quot;https://spring.io/blog/2024/03/04/spring-releases-for-february-2024&quot;&gt;fabulous post about the amazing Spring projects that were released in February&lt;/a&gt; - there are a &lt;em&gt;ton&lt;/em&gt;! Check them out!&lt;/li&gt;
-&lt;li&gt;The Spring Framework lead has a nice blog detailing the expected support timeline for Spring Framework &lt;a href=&quot;https://spring.io/blog/2024/03/01/support-timeline-announcement-for-spring-framework-6-0-x-and-5-3-x&quot;&gt;6.0x and 5.3x, both of which are at least a year old already&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Spring Integration lead Artem Bilan has a nice post introducing &lt;a href=&quot;https://spring.io/blog/2024/03/01/spring-functions-catalog-5-0-0-m1-available&quot;&gt;the Spring Functions Catalog&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;In last week&apos;s episode of &lt;a href=&quot;https://bit.ly/spring-tips-playlist&quot;&gt;&lt;em&gt;Spring Tips&lt;/em&gt;&lt;/a&gt;, I continued our series introducing the Spring Authorization Server, this time applying it to support and secure single-page applications and messaging flows. Stay tuned for the last installment, &lt;a href=&quot;https://www.youtube.com/watch?v=GVsKQ4dp_pQ&quot;&gt;landing tomorrow - Wednesday, the 6th of March, 2024&lt;/a&gt;!&lt;/li&gt;
-&lt;li&gt;Use Spring AI &lt;a href=&quot;https://twitter.com/christzolov/status/1764671164964565267?s=61&amp;#x26;t=crDvmX_wa2d4Zm2XKzcsAg&quot;&gt;to get function-portability across LLMs&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;This is an old curio I just discovered that has &lt;em&gt;zero&lt;/em&gt; future, but I think is kind of interesting nonetheless: would you like to use the Java HTTP Server (the one included in the JDK) as a Spring Boot &lt;code&gt;WebServer&lt;/code&gt;? This old codebase from around 2019 shows how. It, alas, does &lt;em&gt;not&lt;/em&gt; work well if you update it because there&apos;s been an &lt;em&gt;en masse&lt;/em&gt; migration from Java EE to Jakarta EE since then that breaks a lot of the code.&lt;/li&gt;
-&lt;li&gt;Want to rotate SSL certificates with Spring Boot on a Kubernetes platform like OpenShift? &lt;a href=&quot;https://piotrminkowski.com/2024/03/04/rotate-ssl-certificates-with-openshift-and-spring-boot/&quot;&gt;Check out this blog&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Currently in Spring Modulith 1.2 snapshots, &lt;a href=&quot;https://twitter.com/odrotbohm/status/1763179338856374529?s=21&amp;#x26;t=dQfH_W59fQfA1gNoe2tCPg&quot;&gt;there&apos;s a new feature called open application modules&lt;/a&gt;. Neat!&lt;/li&gt;
-&lt;li&gt;I like this German-language article &lt;a href=&quot;https://www.innoq.com/de/blog/2024/02/ollama-llm-spring-ai-rag/&quot;&gt;on using a local LLM (Ollama) with Spring AI&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;Friend of the community Marit van Dijk has a nice blog, &lt;a href=&quot;https://www.innoq.com/de/blog/2024/02/ollama-llm-spring-ai-rag/&quot;&gt;&lt;em&gt;Build a Spring Boot App with AI Assistant&lt;/em&gt;&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;This paper, &lt;a href=&quot;https://arxiv.org/pdf/2401.11867.pdf&quot;&gt;&lt;em&gt;Modular Monolith: Is This the Trend in Software Architecture?&lt;/em&gt;&lt;/a&gt;, is a good read and has a few different mentions of the fantastic &lt;a href=&quot;https://spring.io/projects/spring-modulith&quot;&gt;Spring Modulith project&lt;/a&gt;.&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Spring Releases for February 2024]]></title><link>https://spring.io/blog/2024/03/04/spring-releases-for-february-2024</link><guid isPermaLink="true">https://spring.io/blog/2024/03/04/spring-releases-for-february-2024</guid><dc:creator><![CDATA[Jason Konicki]]></dc:creator><pubDate>Mon, 04 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the Spring team, we are excited to showcase all of the Spring projects that have been released this February.&lt;/p&gt;
-&lt;h2 id=&quot;spring-oss-releases&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-oss-releases&quot; aria-label=&quot;spring oss releases permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring OSS Releases&lt;/h2&gt;
-&lt;p&gt;The table below contains a list of all the open source projects and their versions that have been released.  Each project listed will link to their version details.&lt;/p&gt;
+&lt;li&gt;Support customization of JDK 11+ HttpClient (&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-openfeign/issues/999&quot;&gt;#999&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;spring-cloud-stream&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-stream&quot; aria-label=&quot;spring cloud stream permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Stream&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-stream/releases/tag/v4.1.1&quot;&gt;Added&lt;/a&gt; a few enhancements, addressed various bug fixes and documentation cleanup.&lt;/li&gt;
+&lt;li&gt;See more details at &lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-stream/milestone/93?closed=1&quot;&gt;https://github.com/spring-cloud/spring-cloud-stream/milestone/93?closed=1&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;spring-cloud-gateway&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#spring-cloud-gateway&quot; aria-label=&quot;spring cloud gateway permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Spring Cloud Gateway&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Gateway Server MVC support for AOT (&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-gateway/issues/3171&quot;&gt;#3171&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Allow forcing order of filters through Java DSL configuration(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-gateway/pull/3134&quot;&gt;#3134&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add option to disable RouteRefreshListener (&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-gateway/issues/2958&quot;&gt;#2958&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;Add properties to disable filters if needed (&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-gateway/issues/3310&quot;&gt;#3310&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following modules were updated as part of 2023.0.1:&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr&gt;
-&lt;th&gt;Project&lt;/th&gt;
-&lt;th&gt;Version(s)&lt;/th&gt;
+&lt;th&gt;Module&lt;/th&gt;
+&lt;th&gt;Version&lt;/th&gt;
+&lt;th&gt;Issues&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring AI&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/23/spring-ai-0-8-0-released&quot;&gt;0.8.0&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Vault&lt;/td&gt;
+&lt;td&gt;4.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-vault/releases/tag/v4.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring for Apache Kafka&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/20/spring-for-apache-kafka-3-0-14-3-1-2-and-3-2-0-m1-available-now&quot;&gt;3.2.0-M1, 3.1.2, 3.0.14&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Bus&lt;/td&gt;
+&lt;td&gt;4.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-bus/releases/tag/v4.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring for Apache Pulsar&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/21/spring-for-apache-pulsar-1-1-0-m1-available-now&quot;&gt;1.1.0-M1&lt;/a&gt;, &lt;a href=&quot;https://spring.io/blog/2024/02/20/spring-for-apache-pulsar-1-0-3-available-now&quot;&gt;1.0.3&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Zookeeper&lt;/td&gt;
+&lt;td&gt;4.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-zookeeper/releases/tag/v4.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring Authorization Server&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/21/spring-authorization-server-1-3-0-m2-available-now&quot;&gt;1.3.0-M2&lt;/a&gt;, &lt;a href=&quot;https://spring.io/blog/2024/02/21/spring-authorization-server-1-2-2-and-1-1-5-available-now&quot;&gt;1.2.2, 1.1.5&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Kubernetes&lt;/td&gt;
+&lt;td&gt;3.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-kubernetes/releases/tag/v3.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring Batch&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/21/spring-batch-5-0-5-and-5-1-1-available-now&quot;&gt;5.1.1, 5.0.5&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Task&lt;/td&gt;
+&lt;td&gt;3.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-task/releases/tag/v3.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring Boot&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/22/spring-boot-3-3-0-m2-available-now&quot;&gt;3.3.0-M2&lt;/a&gt;, &lt;a href=&quot;https://spring.io/blog/2024/02/22/spring-boot-3-2-3-available-now&quot;&gt;3.2.3&lt;/a&gt;, &lt;a href=&quot;https://spring.io/blog/2024/02/22/spring-boot-3-1-9-available-now&quot;&gt;3.1.9&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Function&lt;/td&gt;
+&lt;td&gt;4.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-function/releases/tag/v4.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring Data&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/16/first-milestone-of-spring-data-2024-0-0-available&quot;&gt;2024.0.0-M1&lt;/a&gt;, &lt;a href=&quot;https://spring.io/blog/2024/02/16/spring-data-2023-1-3-and-2023-0-9-available&quot;&gt;2023.1.3, 2023.0.9&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Commons&lt;/td&gt;
+&lt;td&gt;4.1.2&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-commons/releases/tag/v4.1.2&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring Framework&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/15/spring-framework-6-1-4-6-0-17-and-5-3-32-available-now&quot;&gt;6.1.4, 6.0.17, 5.3.32&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Openfeign&lt;/td&gt;
+&lt;td&gt;4.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-openfeign/releases/tag/v4.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring for GraphQL&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/21/spring-for-graphql-1-3-m1-released&quot;&gt;1.3-M1&lt;/a&gt;, &lt;a href=&quot;https://spring.io/blog/2024/02/21/spring-for-graphql-1-2-5-released&quot;&gt;1.2.5&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Circuitbreaker&lt;/td&gt;
+&lt;td&gt;3.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-circuitbreaker/releases/tag/v3.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring LDAP&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/21/spring-ldap-3-1-4-and-3-2-2-are-available&quot;&gt;3.2.2, 3.1.4&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Starter Build&lt;/td&gt;
+&lt;td&gt;2023.0.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-starter-build/releases/tag/v2023.0.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring Modulith&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/23/spring-modulith-1-0-6-1-1-3-and-1-2-m2-released&quot;&gt;1.2-M2, 1.1.3, 1.0.6&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Stream&lt;/td&gt;
+&lt;td&gt;4.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-stream/releases/tag/v4.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring Security&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/21/spring-security-6-2-2-6-1-7-and-5-8-10-are-now-available&quot;&gt;6.2.2, 6.1.7, 5.8.10&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Gateway&lt;/td&gt;
+&lt;td&gt;4.1.2&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-gateway/releases/tag/v4.1.2&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
-&lt;td&gt;Spring Shell&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/28/spring-shell-3-1-9-and-3-2-2-are-now-available&quot;&gt;3.2.2, 3.1.19&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Tools&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.io/blog/2024/02/08/spring-tools-4-21-1-released&quot;&gt;4.21.1&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Micrometer&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://github.com/micrometer-metrics/micrometer/releases/tag/v1.13.0-M1&quot;&gt;1.13.0-M1&lt;/a&gt;, &lt;a href=&quot;https://github.com/micrometer-metrics/micrometer/releases/tag/v1.12.3&quot;&gt;1.12.3&lt;/a&gt;, &lt;a href=&quot;https://github.com/micrometer-metrics/micrometer/releases/tag/v1.11.9&quot;&gt;1.11.9&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Micrometer Tracing&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://github.com/micrometer-metrics/tracing/releases/tag/v1.3.0-M1&quot;&gt;1.3.0-M1&lt;/a&gt;, &lt;a href=&quot;https://github.com/micrometer-metrics/tracing/releases/tag/v1.2.3&quot;&gt;1.2.3&lt;/a&gt;, &lt;a href=&quot;https://github.com/micrometer-metrics/tracing/releases/tag/v1.1.10&quot;&gt;1.1.10&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Reactor&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://github.com/reactor/reactor/releases/tag/2023.0.3&quot;&gt;2023.0.3&lt;/a&gt;, &lt;a href=&quot;https://github.com/reactor/reactor/releases/tag/2022.0.16&quot;&gt;2022.0.16&lt;/a&gt;, &lt;a href=&quot;https://github.com/reactor/reactor/releases/tag/2020.0.41&quot;&gt;2020.0.41&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h4 id=&quot;how-can-we-help&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#how-can-we-help&quot; aria-label=&quot;how can we help permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;How can we help?&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://tanzu.vmware.com/spring-health-assessment&quot;&gt;Get a free Spring Health Assessment&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://tanzu.vmware.com/spring-runtime#contact-form&quot;&gt;Talk to an expert&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.io/consulting&quot;&gt;Spring Consulting&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.academy/&quot;&gt;Spring Academy&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&quot;tanzu-spring-runtime-commercial-releases&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#tanzu-spring-runtime-commercial-releases&quot; aria-label=&quot;tanzu spring runtime commercial releases permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Tanzu Spring Runtime Commercial Releases&lt;/h2&gt;
-&lt;p&gt;Tanzu Spring Runtime commercial releases have been released and are now available on the Spring commercial artifact repository. These releases can be accessed by those with a &lt;a href=&quot;https://docs.vmware.com/en/Tanzu-Spring-Runtime/Commercial/Tanzu-Spring-Runtime/spring-commercial-subscription.html&quot;&gt;Spring Enterprise Subscription&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;The table below contains a list of all the commercial artifacts and their versions that have been released.  Each project listed will link to their commercial page which includes their changelog and reference documentation.&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Project&lt;/th&gt;
-&lt;th&gt;Version(s)&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Authorization Server&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-authorization-server&quot;&gt;1.0.5&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Boot&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-boot&quot;&gt;3.0.15, 2.7.20&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Cloud&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-cloud&quot;&gt;2022.0.6&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Cloud Config&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-cloud-config&quot;&gt;4.0.6&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Spring Cloud Consul&lt;/td&gt;
+&lt;td&gt;4.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-consul/releases/tag/v4.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;Spring Cloud Contract&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-cloud-contract&quot;&gt;4.0.6&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;4.1.2&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-contract/releases/tag/v4.1.2&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Config&lt;/td&gt;
+&lt;td&gt;4.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-config/releases/tag/v4.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Spring Cloud Build&lt;/td&gt;
+&lt;td&gt;4.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-build/releases/tag/v4.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td&gt;Spring Cloud Netflix&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-cloud-netflix&quot;&gt;4.0.5&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Cloud Vault&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-cloud-vault&quot;&gt;4.0.3&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Data Cassandra&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-data-cassandra&quot;&gt;4.0.13&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Data Commons&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-data-commons&quot;&gt;3.0.13&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Data JPA&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-data-jpa&quot;&gt;3.0.13&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Data LDAP&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-data-ldap&quot;&gt;3.0.13&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Data MongoDB&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-data-mongodb&quot;&gt;4.0.13&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Data Redis&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-data-redis&quot;&gt;3.0.13&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Data Relational&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-data-relational&quot;&gt;3.0.13&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Data REST&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-data-rest&quot;&gt;4.0.13&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Integration&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-integration&quot;&gt;6.0.10&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring LDAP&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-ldap&quot;&gt;3.0.7&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Security&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-security&quot;&gt;6.0.9&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Session&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-session&quot;&gt;3.0.5&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Spring Shell&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/spring-shell&quot;&gt;3.0.12, 2.1.16&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Micrometer&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/micrometer&quot;&gt;1.10.14&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Micrometer Tracing&lt;/td&gt;
-&lt;td&gt;&lt;a href=&quot;https://spring.vmware.com/projects/micrometer-tracing&quot;&gt;1.0.13&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;4.1.1&lt;/td&gt;
+&lt;td&gt;(&lt;a href=&quot;https://github.com/spring-cloud/spring-cloud-netflix/releases/tag/v4.1.1&quot;&gt;issues&lt;/a&gt;)&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;h4 id=&quot;learn-more-about-tanzu-spring-runtime&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#learn-more-about-tanzu-spring-runtime&quot; aria-label=&quot;learn more about tanzu spring runtime permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Learn more about Tanzu Spring Runtime&lt;/h4&gt;
+&lt;p&gt;As always, we welcome feedback on &lt;a href=&quot;https://github.com/spring-cloud/&quot;&gt;GitHub&lt;/a&gt;, on &lt;a href=&quot;https://gitter.im/spring-cloud/spring-cloud&quot;&gt;Gitter&lt;/a&gt;, on &lt;a href=&quot;https://stackoverflow.com/questions/tagged/spring-cloud&quot;&gt;Stack Overflow&lt;/a&gt;, or on &lt;a href=&quot;https://twitter.com/SpringCloud&quot;&gt;Twitter&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To get started with Maven with a BOM (dependency management only):&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;
+&amp;#x3C;dependencyManagement&gt;
+    &amp;#x3C;dependencies&gt;
+        &amp;#x3C;dependency&gt;
+            &amp;#x3C;groupId&gt;org.springframework.cloud&amp;#x3C;/groupId&gt;
+            &amp;#x3C;artifactId&gt;spring-cloud-dependencies&amp;#x3C;/artifactId&gt;
+            &amp;#x3C;version&gt;2023.0.1&amp;#x3C;/version&gt;
+            &amp;#x3C;type&gt;pom&amp;#x3C;/type&gt;
+            &amp;#x3C;scope&gt;import&amp;#x3C;/scope&gt;
+        &amp;#x3C;/dependency&gt;
+    &amp;#x3C;/dependencies&gt;
+&amp;#x3C;/dependencyManagement&gt;
+&amp;#x3C;dependencies&gt;
+    &amp;#x3C;dependency&gt;
+        &amp;#x3C;groupId&gt;org.springframework.cloud&amp;#x3C;/groupId&gt;
+        &amp;#x3C;artifactId&gt;spring-cloud-starter-config&amp;#x3C;/artifactId&gt;
+    &amp;#x3C;/dependency&gt;
+    &amp;#x3C;dependency&gt;
+        &amp;#x3C;groupId&gt;org.springframework.cloud&amp;#x3C;/groupId&gt;
+        &amp;#x3C;artifactId&gt;spring-cloud-starter-netflix-eureka-client&amp;#x3C;/artifactId&gt;
+    &amp;#x3C;/dependency&gt;
+    ...
+&amp;#x3C;/dependencies&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;or with Gradle:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;buildscript {
+dependencies {
+classpath &quot;io.spring.gradle:dependency-management-plugin:1.0.2.RELEASE&quot;
+}
+}
+
+apply plugin: &quot;io.spring.dependency-management&quot;
+
+dependencyManagement {
+imports {
+mavenBom &apos;org.springframework.cloud:spring-cloud-dependencies:2023.0.1&apos;
+}
+}
+
+dependencies {
+compile &apos;org.springframework.cloud:spring-cloud-starter-config&apos;
+compile &apos;org.springframework.cloud:spring-cloud-starter-netflix-eureka-client&apos;
+...
+}
+&lt;/code&gt;&lt;/pre&gt;</content:encoded></item><item><title><![CDATA[Spring for GraphQL 1.2.6 released]]></title><link>https://spring.io/blog/2024/03/28/spring-for-graphql-1-2-6-released</link><guid isPermaLink="true">https://spring.io/blog/2024/03/28/spring-for-graphql-1-2-6-released</guid><dc:creator><![CDATA[Brian Clozel]]></dc:creator><pubDate>Thu, 28 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I am pleased to announce that Spring for GraphQL 1.2.6 is now available on Maven Central.&lt;/p&gt;
+&lt;p&gt;This release closes &lt;a href=&quot;https://github.com/spring-projects/spring-graphql/releases/tag/v1.2.6&quot;&gt;8 issues&lt;/a&gt;. It is a bit off our usual cycle but we wanted to fix particular issues a give an early chance to external integrations to release against this version.&lt;/p&gt;
+&lt;p&gt;The 1.2.6 version will ship with Spring Boot 3.1.11 and 3.2.5, &lt;a href=&quot;https://calendar.spring.io/&quot;&gt;to be released next month&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&quot;how-can-you-help&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#how-can-you-help&quot; aria-label=&quot;how can you help permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;How can you help?&lt;/h3&gt;
+&lt;p&gt;If you have general questions, please ask on &lt;a href=&quot;https://stackoverflow.com&quot;&gt;stackoverflow.com&lt;/a&gt; using the &lt;a href=&quot;https://stackoverflow.com/tags/spring-graphql&quot;&gt;&lt;code&gt;spring-graphql&lt;/code&gt; tag&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://spring.io/projects/spring-graphql/&quot;&gt;Project Page&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-graphql&quot;&gt;GitHub&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-graphql/issues&quot;&gt;Issues&lt;/a&gt; | &lt;a href=&quot;https://docs.spring.io/spring-graphql/reference&quot;&gt;Documentation&lt;/a&gt; | &lt;a href=&quot;https://stackoverflow.com/questions/tagged/spring-graphql&quot;&gt;Stack Overflow&lt;/a&gt;&lt;/p&gt;</content:encoded></item><item><title><![CDATA[A Bootiful Podcast: Joseph Ottinger and Andrew Lombardi on "Beginning Spring 6"]]></title><link>https://spring.io/blog/2024/03/28/a-bootiful-podcast-joseph-ottinger-and-andrew-lombardi-on-beginning-spring-6</link><guid isPermaLink="true">https://spring.io/blog/2024/03/28/a-bootiful-podcast-joseph-ottinger-and-andrew-lombardi-on-beginning-spring-6</guid><dc:creator><![CDATA[Josh Long]]></dc:creator><pubDate>Thu, 28 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring fans! In this episode I&apos;m joined by Java luminaries and Apress&apos; &lt;em&gt;Beginning Spring 6&lt;/em&gt; authors Joseph Ottinger and Andrew Lombardi&lt;/p&gt;
+&lt;iframe title=&quot;Joseph B. Ottinger and Andrew Lombardi on _Beginning Spring 6_&quot; allowtransparency=&quot;true&quot; height=&quot;150&quot; width=&quot;100%&quot; style=&quot;border: none; min-width: min(100%, 430px);height:150px;&quot; scrolling=&quot;no&quot; data-name=&quot;pb-iframe-player&quot; src=&quot;https://www.podbean.com/player-v2/?i=v6f68-15c577f-pb&amp;from=pb6admin&amp;share=1&amp;download=1&amp;rtl=0&amp;fonts=Arial&amp;skin=1&amp;font-color=&amp;logo_link=episode_page&amp;btn-skin=7&quot; loading=&quot;lazy&quot;&gt;&lt;/iframe&gt;</content:encoded></item><item><title><![CDATA[This Week in Spring - March 26th, 2024]]></title><link>https://spring.io/blog/2024/03/26/this-week-in-spring-march-26th-2024</link><guid isPermaLink="true">https://spring.io/blog/2024/03/26/this-week-in-spring-march-26th-2024</guid><dc:creator><![CDATA[Josh Long]]></dc:creator><pubDate>Tue, 26 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring fans! Welcome to another installment of &lt;em&gt;This Week in Spring&lt;/em&gt;!&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://spring.vmware.com/&quot;&gt;Why Tanzu Spring Runtime?&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.vmware.com/en/Tanzu-Spring-Runtime/Commercial/Tanzu-Spring-Runtime/index.html&quot;&gt;Tanzu Spring Runtime Reference Documentation&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.vmware.com/en/Tanzu-Spring-Runtime/Commercial/Tanzu-Spring-Runtime/spring-commercial-subscription.html&quot;&gt;Spring Enterprise Subscription&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Support timeline announcement for Spring Framework 6.0.x and 5.3.x]]></title><link>https://spring.io/blog/2024/03/01/support-timeline-announcement-for-spring-framework-6-0-x-and-5-3-x</link><guid isPermaLink="true">https://spring.io/blog/2024/03/01/support-timeline-announcement-for-spring-framework-6-0-x-and-5-3-x</guid><dc:creator><![CDATA[Juergen Hoeller]]></dc:creator><pubDate>Fri, 01 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Dear Spring community,&lt;/p&gt;
-&lt;p&gt;As we are preparing for the Spring Framework 6.2 release later this year, it is time to phase out not only the 6.0.x branch but also the 5.3.x line.&lt;/p&gt;
-&lt;p&gt;We hereby announce that the last 6.0.x and 5.3.x releases will be published in August, with the official end of open source support on August 31, 2024.  Along with Spring Framework 5.3.x, the Spring Security project makes the same adjustment for its 5.8.x timeline.&lt;/p&gt;
-&lt;p&gt;The Spring Framework 5.3.x line has been one of the longest-supported branches in Spring&apos;s history and keeps being supported under commercial support terms for another couple of years. You can read more about our commercial releases at &lt;a href=&quot;https://spring.vmware.com&quot;&gt;https://spring.vmware.com&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;With Spring Boot 2.7.x having reached its end of open source support already, we decided to align the last 5.3.x release with the end of the 6.0.x line. If you have not done so already, please plan your upgrade path to 6.1.x at your earliest convenience.&lt;/p&gt;
-&lt;p&gt;The team will focus on Spring Framework 6.2 now, with a first milestone coming up and a release candidate planned for September; more on this soon.&lt;/p&gt;
-&lt;p&gt;Cheers,
-Juergen&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Functions Catalog 5.0.0?M1 Available]]></title><link>https://spring.io/blog/2024/03/01/spring-functions-catalog-5-0-0-m1-available</link><guid isPermaLink="true">https://spring.io/blog/2024/03/01/spring-functions-catalog-5-0-0-m1-available</guid><dc:creator><![CDATA[Artem Bilan]]></dc:creator><pubDate>Fri, 01 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of Spring Cloud Dataflow team, it is my pleasure to introduce you to Spring Functions Catalog.
-The project&apos;s primary focus is to provide a set of standalone Java functions that can be useful in the end-user applications as-is.
-All the published artifacts are, essentially, auto-configurations for some specific &lt;code&gt;Supplier&lt;/code&gt;, &lt;code&gt;Function&lt;/code&gt; or &lt;code&gt;Consumer&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;We have just released &lt;code&gt;5.0.0-M1&lt;/code&gt; into &lt;a href=&quot;https://repo.spring.io/milestone&quot;&gt;https://repo.spring.io/milestone&lt;/a&gt; repository, and all you need is to include this BOM into your Gradle (or Maven) configuration:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-groovy&quot;&gt;org.springframework.cloud.fn:spring-function-dependencies:5.0.0-M1
+&lt;li&gt;Sam Brannen shares some good news: &lt;a href=&quot;https://twitter.com/sam_brannen/status/1771547633019940866?s=12&amp;#x26;t=n-UflcIbnx1lage-TBk0Cg&quot;&gt;a null-safe Index operator for the Spring Expression Language (SpEL) is coming to Spring Framework 6.2!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;This is interesting, and a nice application of AI (do I even need to spell out &quot;artificial intelligence&quot; anymore?): &lt;a href=&quot;https://flounder.dev/posts/localize-apps-with-ai/&quot;&gt;localize applications with Spring AI&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;this is a neat guide by community member Wim Deblauwe over on InfoQ: A &lt;a href=&quot;https://www.infoq.com/minibooks/spring-boot-api-backend-version2/&quot;&gt;&lt;em&gt;Practical Guide to Building an API Back End with Spring Boot - version 2&lt;/em&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;James Ward, founder of the WebJars project and a legend in his own right, invites folks to contribute feedback on the new &lt;a href=&quot;https://twitter.com/_JamesWard/status/1769769144772079827?s=12&amp;#x26;t=n-UflcIbnx1lage-TBk0Cg&quot;&gt;&lt;code&gt;webjars-locator-lite&lt;/code&gt; module&lt;/a&gt;, created by the good, the great, the amazing and inimitable Dr. David Syer&lt;/li&gt;
+&lt;li&gt;the Java Techie Youtube channel has a nice &lt;a href=&quot;https://www.youtube.com/watch?v=oHPNpgy21Rk&quot;&gt;video looking at Spring Boot for Apache Pulsar&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;I love this talk from &lt;a href=&quot;https://www.youtube.com/watch?v=exqfB1WaqIw&quot;&gt;Voxxed Days Zurich from community member Maciej Walkowiak on Performant Spring Data JPA&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Speaking of Dr. Syer, he&apos;s got a great post, &lt;a href=&quot;https://spring.io/blog/2024/03/22/reflectionless-templates-with-spring&quot;&gt;&lt;em&gt;Reflectionless templates with Spring&lt;/em&gt;&lt;/a&gt;, up on the Spring blog&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/03/22/spring-modulith-1-2-m3-released&quot;&gt;Spring Modulith 1.2 M3 has been released&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/03/22/spring-boot-3-3-0-m3-available-now&quot;&gt;Spring Boot 3.3.0-M3 is available now&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;On the last episode of A Bootiful Podcast, I &lt;a href=&quot;https://spring.io/blog/2024/03/21/a-bootiful-podcast-stuart-marks-aka-dr-deprecator-on-java-its-amazing&quot;&gt;talked to Stuart Marks, Java&apos;s famous &quot;Dr. Deprecator&quot;&lt;/a&gt; - do &lt;em&gt;not&lt;/em&gt; miss this installment!&lt;/li&gt;
+&lt;li&gt;Spring Shell 3.1.10 and 3.2.3 are now available](&lt;a href=&quot;https://spring.io/blog/2024/03/21/spring-shell-3-1-10-and-3-2-3-are-now-available&quot;&gt;https://spring.io/blog/2024/03/21/spring-shell-3-1-10-and-3-2-3-are-now-available&lt;/a&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/03/21/spring-boot-3-2-4-available-now&quot;&gt;Spring Boot 3.2.4 is now available now&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/03/21/spring-boot-3-1-10-available-now&quot;&gt;Spring Boot 3.1.10 is available now&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/03/20/spring-integration-6-3-0-m2-6-2-3-and-6-1-7-available-now&quot;&gt;Spring Integration 6.3.0-m2, 6.2.3, and 6.1.7, are available now&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/03/20/spring-session-3-2-2-and-3-1-5-are-available-now&quot;&gt;Spring Session 3.2.2 and 3.1.5 are available now&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://spring.io/blog/2024/03/20/spring-session-3-3-0-m3-available-now&quot;&gt;Spring Session 3.3.0-M3 is available now&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;in last week&apos;s installment of &lt;em&gt;Spring Tips&lt;/em&gt;, &lt;a href=&quot;https://spring.io/blog/2024/03/20/spring-tips-the-exposed-orm-for-kotlin&quot;&gt;I looked at the Kotlin Exposed ORM library and its integration with Spring Boot&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[Reflectionless Templates With Spring]]></title><link>https://spring.io/blog/2024/03/22/reflectionless-templates-with-spring</link><guid isPermaLink="true">https://spring.io/blog/2024/03/22/reflectionless-templates-with-spring</guid><dc:creator><![CDATA[Dave Syer]]></dc:creator><pubDate>Fri, 22 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;A few Java libraries have shown up recently that use text templates, but compile to Java classes at build time. They can thus claim to some extent to be &quot;reflection free&quot;. Together with potential benefits of runtime performance, they promise to be easy to use and integrate with GraalVM native image compilation, so they are quite interesting for people just getting started with that stack in Spring Boot 3.x. We take a look at a selection of libraries (&lt;a href=&quot;https://github.com/jstachio/jstachio&quot;&gt;JStachio&lt;/a&gt;, &lt;a href=&quot;https://github.com/fizzed/rocker&quot;&gt;Rocker&lt;/a&gt;, &lt;a href=&quot;https://github.com/casid/jte&quot;&gt;JTE&lt;/a&gt; and &lt;a href=&quot;https://github.com/manifold-systems/manifold/tree/master/manifold-deps-parent/manifold-templates&quot;&gt;ManTL&lt;/a&gt;) and how to get them running.&lt;/p&gt;
+&lt;p&gt;The source code for the samples is in &lt;a href=&quot;https://github.com/dsyer/java-template-demo&quot;&gt;GitHub&lt;/a&gt; and each template engine has its own branch. The sample is intentionally very simple and doesn&apos;t use all the features of the template engines. The focus is on how to integrate them with Spring Boot and GraalVM.&lt;/p&gt;
+&lt;h2 id=&quot;jstachio&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#jstachio&quot; aria-label=&quot;jstachio permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;JStachio&lt;/h2&gt;
+&lt;p&gt;Since it is my favourite, I will start with JStachio. It is very easy to use and has a very small footprint and is also very fast at runtime. The templates are plain text files written in &lt;a href=&quot;https://mustache.github.io/&quot;&gt;Mustache&lt;/a&gt; which are then compiled to Java classes at build time and rendered at runtime.&lt;/p&gt;
+&lt;p&gt;In the sample there is a template for the home page (&lt;code&gt;index.mustache&lt;/code&gt;) that just prints a greeting and a visitor count:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-html&quot;&gt;{{&amp;#x3C;layout}}{{$body}}
+Hello {{name}}!
+&amp;#x3C;br&gt;
+&amp;#x3C;br&gt;
+You are visitor number {{visits}}.
+{{/body}}
+{{/layout}}
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;and choose respective function as dependency for your project.&lt;/p&gt;
-&lt;p&gt;The Spring Functions Catalog is a rebranding (and next generation) of the &lt;code&gt;functions&lt;/code&gt; sub-module of &lt;a href=&quot;https://github.com/spring-cloud/stream-applications&quot;&gt;Stream Applications&lt;/a&gt; project.
-That&apos;s why we chose a version as &lt;code&gt;5.0&lt;/code&gt; from the start since all the functions in this project do the same what they have in Stream Applications.
-Therefore, the next our natural step is to migrate Stream Applications to use this new Spring Functions Catalog.&lt;/p&gt;
-&lt;p&gt;However, the goal of Spring Functions Catalog is not only to feed Stream Applications.
-Because all of them are independent artifacts of an auto-configuration for a single &lt;code&gt;Supplier&lt;/code&gt;, &lt;code&gt;Function&lt;/code&gt; or &lt;code&gt;Consumer&lt;/code&gt; with specific job to do, these functions can simply be added into classpath and used in the target project as-is or composed with other tasks.
-Most of these functions provide an auto-configuration for specific Spring Integration &lt;a href=&quot;https://docs.spring.io/spring-integration/reference/endpoint-summary.html#endpoint-summary&quot;&gt;Channel Adapter&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Here are just a few examples:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;the &lt;code&gt;sftpSupplier&lt;/code&gt; connects to a SFTP server and polls files from a remote directory and &quot;supplies&quot; the files to your application&lt;/li&gt;
-&lt;li&gt;the &lt;code&gt;kafkaPublisher&lt;/code&gt; (the &lt;code&gt;java.util.function.Consumer&lt;/code&gt; implementation) produces records into an Apache Kafka topic&lt;/li&gt;
-&lt;li&gt;the &lt;code&gt;aggregatorFunction&lt;/code&gt; groups multiple inputs into one according to some correlation key&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;After being auto-configured into the &lt;code&gt;ApplicationContext&lt;/code&gt;, these function can be injected into to the target service and composed with plain Java API (see &lt;code&gt;Function.andThen(Function)&lt;/code&gt;).
-However, better (and more natural for Spring applications) way is to use &lt;a href=&quot;https://spring.io/projects/spring-cloud-function&quot;&gt;Spring Cloud Function&lt;/a&gt; project capabilities.
-For example, the &lt;code&gt;FunctionFlowBuilder&lt;/code&gt; from &lt;a href=&quot;https://docs.spring.io/spring-cloud-function/docs/current/reference/html/spring-integration.html#spring-integration&quot;&gt;Spring Cloud Function Integration&lt;/a&gt; module can be used to compose an &lt;code&gt;IntegrationFlow&lt;/code&gt; for any complex solution.
-Another way is to compose them by names via &lt;code&gt;spring.cloud.function.definition&lt;/code&gt; configuration property.&lt;/p&gt;
-&lt;p&gt;As a proof of concept the &lt;a href=&quot;https://github.com/spring-cloud/spring-functions-catalog/tree/main/samples/time-spel-log&quot;&gt;time-spel-log&lt;/a&gt; sample in the project repository has these dependencies:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-groovy&quot;&gt;implementation &apos;org.springframework.cloud.fn:spring-time-supplier&apos;
-implementation &apos;org.springframework.cloud.fn:spring-spel-function&apos;
-implementation &apos;org.springframework.cloud.fn:spring-log-consumer&apos;
+&lt;p&gt;It uses a trivial &quot;layout&quot; template (&lt;code&gt;layout.mustache&lt;/code&gt;):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-html&quot;&gt;&amp;#x3C;html&gt;
+  &amp;#x3C;head&gt;&amp;#x3C;/head&gt;
+  &amp;#x3C;body&gt;{{$body}}{{/body}}
+  &amp;#x3C;/body&gt;
+&amp;#x3C;/html&gt;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The &lt;code&gt;application.yml&lt;/code&gt; has this property:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-yaml&quot;&gt;spring:
-  cloud:
-    function:
-      definition: timeSupplier|spelFunction|logConsumer
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The application logic is just like this:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@Scheduled(fixedDelay = 1000)
-void scheduleFunctionCall() {
-  this.composedFunction.run();
+&lt;p&gt;(The layout is not strictly necessary but it is a good way to show how to compose templates).&lt;/p&gt;
+&lt;p&gt;The JStachio APT processor will generate a Java class for each template it finds with a &lt;code&gt;@JStache&lt;/code&gt; annotation which is used to identify the template file in the source code. In this case we have:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@JStache(path = &quot;index&quot;)
+public class DemoModel {
+	public String name;
+	public long visits;
+
+	public DemoModel(String name, long visits) {
+		this.name = name;
+		this.visits = visits;
+	}
 }
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Where &lt;code&gt;composedFunction&lt;/code&gt; is a &lt;code&gt;Runnable&lt;/code&gt; from &lt;code&gt;FunctionCatalog&lt;/code&gt; and it is that mentioned above composition in the &lt;code&gt;application.yml&lt;/code&gt;.
-The application emits into logs the current time after some transformation every second.&lt;/p&gt;
-&lt;p&gt;Give Spring Functions Catalog a shot, and any feedback or contribution are welcome!&lt;/p&gt;
-&lt;p&gt;From here we are heading for &lt;code&gt;RC1&lt;/code&gt; in the end of March and &lt;code&gt;GA&lt;/code&gt; in April.&lt;/p&gt;
-&lt;p&gt;See more information in &lt;a href=&quot;https://github.com/spring-cloud/spring-functions-catalog&quot;&gt;GitHub repository&lt;/a&gt; for Spring Functions Catalog.&lt;/p&gt;
-&lt;p&gt;Cheers, +
-Artem&lt;/p&gt;</content:encoded></item><item><title><![CDATA[A Bootiful Podcast: Roni Dover on Digma AI]]></title><link>https://spring.io/blog/2024/02/29/a-bootiful-podcast-roni-dover-on-digma-ai</link><guid isPermaLink="true">https://spring.io/blog/2024/02/29/a-bootiful-podcast-roni-dover-on-digma-ai</guid><dc:creator><![CDATA[Josh Long]]></dc:creator><pubDate>Thu, 29 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;Hi, Spring fans! In this installment we talk to Digma AI founder Roni Dover&lt;/p&gt;
-&lt;iframe title=&quot;Roni Dover on Digma AI&quot; allowtransparency=&quot;true&quot; height=&quot;150&quot; width=&quot;100%&quot; style=&quot;border: none; min-width: min(100%, 430px);height:150px;&quot; scrolling=&quot;no&quot; data-name=&quot;pb-iframe-player&quot; src=&quot;https://www.podbean.com/player-v2/?i=dgctj-15985cd-pb&amp;from=pb6admin&amp;share=1&amp;download=1&amp;rtl=0&amp;fonts=Arial&amp;skin=1&amp;font-color=&amp;logo_link=episode_page&amp;btn-skin=7&quot; loading=&quot;lazy&quot;&gt;&lt;/iframe&gt;</content:encoded></item><item><title><![CDATA[Spring Tips: the Spring Authorization Server: securing SPAs and messaging flows]]></title><link>https://spring.io/blog/2024/02/28/spring-tips-the-spring-authorization-server-securing-spas-and-messaging</link><guid isPermaLink="true">https://spring.io/blog/2024/02/28/spring-tips-the-spring-authorization-server-securing-spas-and-messaging</guid><dc:creator><![CDATA[Josh Long]]></dc:creator><pubDate>Wed, 28 Feb 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;hi, Spring fans! In this installment, we continue our look at the venerable Spring Authorization Server, this time looking at how to extend its use beyond just HTTP APIs, to secure single page applications and messaging flows with OAuth.&lt;/p&gt;
-&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/p3aLjH2VPzU?si=wfTWGituj_bjA-Pz&quot; title=&quot;YouTube video player&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&quot; allowfullscreen&gt;&lt;/iframe&gt;</content:encoded></item></channel></rss>
+&lt;p&gt;The &lt;code&gt;path&lt;/code&gt; attribute of the &lt;code&gt;@JStache&lt;/code&gt; annotation is the name of the template file without the extension (see below for how that gets stitched together). You could also use a Java record for the model which is neat, but since the other template engines don&apos;t support it we&apos;ll leave it out and make the samples more comparable.&lt;/p&gt;
+&lt;h3 id=&quot;build-configuration&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#build-configuration&quot; aria-label=&quot;build configuration permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Build Configuration&lt;/h3&gt;
+&lt;p&gt;To compile this to a Java class, you need to add some configuration to the compiler plugin in &lt;code&gt;pom.xml&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;plugin&gt;
+	&amp;#x3C;artifactId&gt;maven-compiler-plugin&amp;#x3C;/artifactId&gt;
+	&amp;#x3C;configuration&gt;
+		&amp;#x3C;annotationProcessorPaths&gt;
+			&amp;#x3C;annotationProcessorPath&gt;
+				&amp;#x3C;groupId&gt;io.jstach&amp;#x3C;/groupId&gt;
+				&amp;#x3C;artifactId&gt;jstachio-apt&amp;#x3C;/artifactId&gt;
+				&amp;#x3C;version&gt;${jstachio.version}&amp;#x3C;/version&gt;
+			&amp;#x3C;/annotationProcessorPath&gt;
+		&amp;#x3C;/annotationProcessorPaths&gt;
+	&amp;#x3C;/configuration&gt;
+&amp;#x3C;/plugin&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;JStachio comes with some Spring Boot integration, so you only need to add it to the classpath:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;dependency&gt;
+	&amp;#x3C;groupId&gt;io.jstach&amp;#x3C;/groupId&gt;
+	&amp;#x3C;artifactId&gt;jstachio-spring-boot-starter-webmvc&amp;#x3C;/artifactId&gt;
+	&amp;#x3C;version&gt;${jstachio.version}&amp;#x3C;/version&gt;
+&amp;#x3C;/dependency&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;controller&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#controller&quot; aria-label=&quot;controller permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Controller&lt;/h3&gt;
+&lt;p&gt;You can use the template in a controller, for example:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@GetMapping(&quot;/&quot;)
+public View view() {
+	visitsRepository.add();
+	return JStachioModelView.of(new DemoModel(&quot;World&quot;, visitsRepository.get()));
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This controller returns a &lt;code&gt;View&lt;/code&gt; constructed from a &lt;code&gt;DemoModel&lt;/code&gt;. It could also just return the &lt;code&gt;DemoModel&lt;/code&gt; directly and Spring Boot will wrap it in a &lt;code&gt;JStachioModelView&lt;/code&gt; automatically.&lt;/p&gt;
+&lt;h3 id=&quot;jstachio-configuration&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#jstachio-configuration&quot; aria-label=&quot;jstachio configuration permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;JStachio Configuration&lt;/h3&gt;
+&lt;p&gt;There is also global configuration in the &lt;code&gt;DemoApplication&lt;/code&gt; class:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@JStachePath(prefix = &quot;templates/&quot;, suffix = &quot;.mustache&quot;)
+@SpringBootApplication
+public class DemoApplication {
+	...
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and a &lt;code&gt;package-info.java&lt;/code&gt; file that points back to it (you need one of these per Java package that contains &lt;code&gt;@JStache&lt;/code&gt; models):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@JStacheConfig(using = DemoApplication.class)
+package demo;
+...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;running-the-sample&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#running-the-sample&quot; aria-label=&quot;running the sample permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Running the Sample&lt;/h3&gt;
+&lt;p&gt;Run the application with &lt;code&gt;./mvnw spring-boot:run&lt;/code&gt; (or in the IDE from the &lt;code&gt;main&lt;/code&gt; method) and you should see the home page at &lt;code&gt;http://localhost:8080/&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The generated sources after compilation are in &lt;code&gt;target/generated-sources/annotations&lt;/code&gt; and you can see the generated Java class for the &lt;code&gt;DemoModel&lt;/code&gt; there:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ tree target/generated-sources/annotations/
+target/generated-sources/annotations/
+戌式式 demo
+    戌式式 DemoModelRenderer.java
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The sample also includes a &lt;a href=&quot;https://docs.spring.io/spring-boot/docs/3.2.3/maven-plugin/reference/htmlsingle/#run.test-run-goal&quot;&gt;test main&lt;/a&gt; so you can run from the command line with &lt;code&gt;./mvnw spring-boot:test-run&lt;/code&gt; or via the test main in the IDE, and the application will restart when you make changes in the IDE. One of the disadvantages of the build-time compilation is that you have to force a recompile to see changes in the templates. The IDE won&apos;t do that automatically, so you might have to use another tool to trigger a recompile. I have had some success with using this to force the model class to recompile when the template changes:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ while inotifywait src/main/resources/templates -e close_write; do \
+  sleep 1; \
+  find src/main/java -name \*Model.java -exec touch {} \;; \
+done
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;inotifywait&lt;/code&gt; command is a tool that waits for a file to be closed after a write. It is easy to install and use on any Linux distribution or on a Mac.&lt;/p&gt;
+&lt;h3 id=&quot;native-image&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#native-image&quot; aria-label=&quot;native image permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Native Image&lt;/h3&gt;
+&lt;p&gt;A native image can be generated with no additional configuration using &lt;code&gt;./mvnw -P native spring-boot:build-image&lt;/code&gt; (or using the &lt;code&gt;native-image&lt;/code&gt; plugin directly). The image starts up in less than 0.1s:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ docker run -p 8080:8080 demo:0.0.1-SNAPSHOT
+
+  .   ____          _            __ _ _
+ /\\ / ___&apos;_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | &apos;_ | &apos;_| | &apos;_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  &apos;  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.4)
+
+2024-03-22T12:23:45.403Z  INFO 1 --- [           main] demo.DemoApplication                     : Starting AOT-processed DemoApplication using Java 17.0.10 with PID 1 (/workspace/demo.DemoApplication started by cnb in /workspace)
+2024-03-22T12:23:45.403Z  INFO 1 --- [           main] demo.DemoApplication                     : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-03-22T12:23:45.418Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2024-03-22T12:23:45.419Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-03-22T12:23:45.419Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.19]
+2024-03-22T12:23:45.429Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-03-22T12:23:45.429Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 26 ms
+2024-03-22T12:23:45.462Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path &apos;&apos;
+2024-03-22T12:23:45.462Z  INFO 1 --- [           main] demo.DemoApplication                     : Started DemoApplication in 0.069 seconds (process running for 0.073)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&quot;rocker&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#rocker&quot; aria-label=&quot;rocker permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Rocker&lt;/h2&gt;
+&lt;p&gt;Rocker can be used in a similar way to JStachio. The templates are written in a custom language that is like HTML with additional Java features (a bit like JSP). The home page looks like this (&lt;code&gt;demo.rocker.html&lt;/code&gt;):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-html&quot;&gt;@import demo.DemoModel
+
+@args(DemoModel model)
+
+@templates.layout.template(&quot;Demo&quot;) -&gt; {
+	&amp;#x3C;h1&gt;Demo&amp;#x3C;/h1&gt;
+	&amp;#x3C;p&gt;Hello @model.name!&amp;#x3C;/p&gt;
+	&amp;#x3C;br&gt;
+	&amp;#x3C;br&gt;
+	&amp;#x3C;p&gt;You are visitor number @model.visits.&amp;#x3C;/p&gt;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It imports the &lt;code&gt;DemoModel&lt;/code&gt; object - the implementation is identical to the JStachio sample. The template also refers directly to its layout (calling a static method on &lt;code&gt;templates.layout&lt;/code&gt;). The layout is a separate template file (&lt;code&gt;layout.rocker.html&lt;/code&gt;):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-html&quot;&gt;@args (String title, RockerBody content)
+
+&amp;#x3C;html&gt;
+    &amp;#x3C;head&gt;
+        &amp;#x3C;title&gt;@title&amp;#x3C;/title&gt;
+    &amp;#x3C;/head&gt;
+    &amp;#x3C;body&gt;
+    @content
+    &amp;#x3C;/body&gt;
+&amp;#x3C;/html&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;build-configuration-1&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#build-configuration-1&quot; aria-label=&quot;build configuration 1 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Build Configuration&lt;/h3&gt;
+&lt;p&gt;Rocker needs an APT processor and some manual addition of the generated sources to the build input. It can all be configured in the &lt;code&gt;pom.xml&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;plugin&gt;
+	&amp;#x3C;groupId&gt;com.fizzed&amp;#x3C;/groupId&gt;
+	&amp;#x3C;artifactId&gt;rocker-maven-plugin&amp;#x3C;/artifactId&gt;
+	&amp;#x3C;version&gt;1.2.1&amp;#x3C;/version&gt;
+	&amp;#x3C;executions&gt;
+		&amp;#x3C;execution&gt;
+			&amp;#x3C;?m2e execute onConfiguration,onIncremental?&gt;
+			&amp;#x3C;id&gt;generate-rocker-templates&amp;#x3C;/id&gt;
+			&amp;#x3C;phase&gt;generate-sources&amp;#x3C;/phase&gt;
+			&amp;#x3C;goals&gt;
+				&amp;#x3C;goal&gt;generate&amp;#x3C;/goal&gt;
+			&amp;#x3C;/goals&gt;
+			&amp;#x3C;configuration&gt;
+				&amp;#x3C;javaVersion&gt;${java.version}&amp;#x3C;/javaVersion&gt;
+				&amp;#x3C;templateDirectory&gt;src/main/resources&amp;#x3C;/templateDirectory&gt;
+				&amp;#x3C;outputDirectory&gt;target/generated-sources/rocker&amp;#x3C;/outputDirectory&gt;
+				&amp;#x3C;discardLogicWhitespace&gt;true&amp;#x3C;/discardLogicWhitespace&gt;
+				&amp;#x3C;targetCharset&gt;UTF-8&amp;#x3C;/targetCharset&gt;
+				&amp;#x3C;postProcessing&gt;
+					&amp;#x3C;param&gt;com.fizzed.rocker.processor.LoggingProcessor&amp;#x3C;/param&gt;
+					&amp;#x3C;param&gt;com.fizzed.rocker.processor.WhitespaceRemovalProcessor&amp;#x3C;/param&gt;
+				&amp;#x3C;/postProcessing&gt;
+			&amp;#x3C;/configuration&gt;
+		&amp;#x3C;/execution&gt;
+	&amp;#x3C;/executions&gt;
+&amp;#x3C;/plugin&gt;
+&amp;#x3C;plugin&gt;
+	&amp;#x3C;groupId&gt;org.codehaus.mojo&amp;#x3C;/groupId&gt;
+	&amp;#x3C;artifactId&gt;build-helper-maven-plugin&amp;#x3C;/artifactId&gt;
+	&amp;#x3C;executions&gt;
+		&amp;#x3C;execution&gt;
+			&amp;#x3C;phase&gt;generate-sources&amp;#x3C;/phase&gt;
+			&amp;#x3C;goals&gt;
+				&amp;#x3C;goal&gt;add-source&amp;#x3C;/goal&gt;
+			&amp;#x3C;/goals&gt;
+			&amp;#x3C;configuration&gt;
+				&amp;#x3C;sources&gt;
+					&amp;#x3C;source&gt;${project.build.directory}/generated-sources/rocker&amp;#x3C;/source&gt;
+				&amp;#x3C;/sources&gt;
+			&amp;#x3C;/configuration&gt;
+		&amp;#x3C;/execution&gt;
+	&amp;#x3C;/executions&gt;
+&amp;#x3C;/plugin&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;controller-1&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#controller-1&quot; aria-label=&quot;controller 1 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Controller&lt;/h3&gt;
+&lt;p&gt;The controller implementation is very conventional - it constructs a model and returns the name of the &quot;demo&quot; view:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@GetMapping(&quot;/&quot;)
+public String view(Model model) {
+	visitsRepository.add();
+	model.addAttribute(&quot;arguments&quot;, Map.of(&quot;model&quot;, new DemoModel(&quot;myst?rieux visiteur&quot;, visitsRepository.get())));
+	return &quot;demo&quot;;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We are using a naming convention for &quot;arguments&quot; as a special model attribute. This is a detail of the &lt;code&gt;View&lt;/code&gt; implementation that we will see later.&lt;/p&gt;
+&lt;h3 id=&quot;rocker-configuration&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#rocker-configuration&quot; aria-label=&quot;rocker configuration permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Rocker Configuration&lt;/h3&gt;
+&lt;p&gt;Rocker doesn&apos;t come with its own Spring Boot integration but it&apos;s not hard to implement, and you only have to do it once. The sample contains a &lt;code&gt;View&lt;/code&gt; implementation, plus a &lt;code&gt;ViewResolver&lt;/code&gt; and some configuration in &lt;code&gt;RockerAutoConfiguration&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@Configuration
+public class RockerAutoConfiguration {
+	@Bean
+	public ViewResolver rockerViewResolver() {
+		return new RockerViewResolver();
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;RockerViewResolver&lt;/code&gt; is a &lt;code&gt;ViewResolver&lt;/code&gt; that uses the Rocker template engine to render the templates. The &lt;code&gt;View&lt;/code&gt; implementation is a wrapper around the Rocker template class:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;public class RockerViewResolver implements ViewResolver, Ordered {
+
+	private String prefix = &quot;templates/&quot;;
+	private String suffix = &quot;.rocker.html&quot;;
+
+	@Override
+	@Nullable
+	public View resolveViewName(String viewName, Locale locale) throws Exception {
+		RockerView view = new RockerView(prefix + viewName + suffix);
+		return view;
+	}
+
+	@Override
+	public int getOrder() {
+		return Ordered.LOWEST_PRECEDENCE - 10;
+	}
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If you look at the implementation of &lt;code&gt;RockerView&lt;/code&gt; you will see that it is a wrapper around the Rocker template class, and that it contains some reflection code to find the template parameter names. This could be a problem for the native image, so it is not ideal, but we will see how to fix it later. Rocker internally also uses reflection to bind the template parameters to the model, so it is not completely reflection free anyway.&lt;/p&gt;
+&lt;h3 id=&quot;running-the-sample-1&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#running-the-sample-1&quot; aria-label=&quot;running the sample 1 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Running the Sample&lt;/h3&gt;
+&lt;p&gt;If you run the sample with &lt;code&gt;./mvnw spring-boot:run&lt;/code&gt; you will see the home page at &lt;code&gt;http://localhost:8080/&lt;/code&gt;. The generated source code comes out as one Java class per template in &lt;code&gt;target/generated-sources/rocker/&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ tree target/generated-sources/rocker/
+target/generated-sources/rocker/
+戌式式 templates
+    戍式式 demo.java
+    戌式式 layout.java
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;native-image-1&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#native-image-1&quot; aria-label=&quot;native image 1 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Native Image&lt;/h3&gt;
+&lt;p&gt;The native image would need some additional configuration to permit the reflection during rendering. We had a few attempts at this and it quickly became apparent that reflection is used all over the internals of Rocker and it would be a lot of effort to get it to work with GraalVM. Maybe worth coming back to one day.&lt;/p&gt;
+&lt;h2 id=&quot;jte&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#jte&quot; aria-label=&quot;jte permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;JTE&lt;/h2&gt;
+&lt;p&gt;(The JTE sample is a direct copy from the project documentation. The other samples in this document only have the structure they do because they mirror this one.)&lt;/p&gt;
+&lt;p&gt;Like Rocker, JTE has a template language similar to HTML with additional Java features. The templates in the project documentation are in a &lt;code&gt;jte&lt;/code&gt; directory alongside &lt;code&gt;java&lt;/code&gt;, so we adopt the same convention. The home page looks like this (&lt;code&gt;demo.jte&lt;/code&gt;):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@import demo.DemoModel
+
+@param DemoModel model
+
+Hello ${model.name}!
+&amp;#x3C;br&gt;
+&amp;#x3C;br&gt;
+You are visitor number ${model.visits}.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;There is no layout template in this sample because JTE doesn&apos;t explicitly support composition of templates. The &lt;code&gt;DemoModel&lt;/code&gt; is similar to the one we used for the other samples.&lt;/p&gt;
+&lt;h3 id=&quot;build-configuration-2&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#build-configuration-2&quot; aria-label=&quot;build configuration 2 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Build Configuration&lt;/h3&gt;
+&lt;p&gt;In the &lt;code&gt;pom.xml&lt;/code&gt; you need to add the JTE compiler plugin:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;plugin&gt;
+	&amp;#x3C;groupId&gt;gg.jte&amp;#x3C;/groupId&gt;
+	&amp;#x3C;artifactId&gt;jte-maven-plugin&amp;#x3C;/artifactId&gt;
+	&amp;#x3C;version&gt;${jte.version}&amp;#x3C;/version&gt;
+	&amp;#x3C;configuration&gt;
+		&amp;#x3C;sourceDirectory&gt;${basedir}/src/main/jte&amp;#x3C;/sourceDirectory&gt;
+		&amp;#x3C;contentType&gt;Html&amp;#x3C;/contentType&gt;
+		&amp;#x3C;binaryStaticContent&gt;true&amp;#x3C;/binaryStaticContent&gt;
+	&amp;#x3C;/configuration&gt;
+	&amp;#x3C;executions&gt;
+		&amp;#x3C;execution&gt;
+			&amp;#x3C;?m2e execute onConfiguration,onIncremental?&gt;
+			&amp;#x3C;phase&gt;generate-sources&amp;#x3C;/phase&gt;
+			&amp;#x3C;goals&gt;
+				&amp;#x3C;goal&gt;generate&amp;#x3C;/goal&gt;
+			&amp;#x3C;/goals&gt;
+		&amp;#x3C;/execution&gt;
+	&amp;#x3C;/executions&gt;
+&amp;#x3C;/plugin&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;along with some source and resource copying:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;plugin&gt;
+	&amp;#x3C;groupId&gt;org.codehaus.mojo&amp;#x3C;/groupId&gt;
+	&amp;#x3C;artifactId&gt;build-helper-maven-plugin&amp;#x3C;/artifactId&gt;
+	&amp;#x3C;executions&gt;
+		&amp;#x3C;execution&gt;
+			&amp;#x3C;phase&gt;generate-sources&amp;#x3C;/phase&gt;
+			&amp;#x3C;goals&gt;
+				&amp;#x3C;goal&gt;add-source&amp;#x3C;/goal&gt;
+			&amp;#x3C;/goals&gt;
+			&amp;#x3C;configuration&gt;
+				&amp;#x3C;sources&gt;
+					&amp;#x3C;source&gt;${project.build.directory}/generated-sources/jte&amp;#x3C;/source&gt;
+				&amp;#x3C;/sources&gt;
+			&amp;#x3C;/configuration&gt;
+		&amp;#x3C;/execution&gt;
+	&amp;#x3C;/executions&gt;
+&amp;#x3C;/plugin&gt;
+
+&amp;#x3C;plugin&gt;
+	&amp;#x3C;artifactId&gt;maven-resources-plugin&amp;#x3C;/artifactId&gt;
+	&amp;#x3C;version&gt;3.0.2&amp;#x3C;/version&gt;
+	&amp;#x3C;executions&gt;
+		&amp;#x3C;execution&gt;
+			&amp;#x3C;id&gt;copy-resources&amp;#x3C;/id&gt;
+			&amp;#x3C;phase&gt;process-classes&amp;#x3C;/phase&gt;
+			&amp;#x3C;goals&gt;
+				&amp;#x3C;goal&gt;copy-resources&amp;#x3C;/goal&gt;
+			&amp;#x3C;/goals&gt;
+			&amp;#x3C;configuration&gt;
+				&amp;#x3C;outputDirectory&gt;${project.build.outputDirectory}&amp;#x3C;/outputDirectory&gt;
+				&amp;#x3C;resources&gt;
+					&amp;#x3C;resource&gt;
+						&amp;#x3C;directory&gt;${basedir}/target/generated-sources/jte&amp;#x3C;/directory&gt;
+						&amp;#x3C;includes&gt;
+							&amp;#x3C;include&gt;**/*.bin&amp;#x3C;/include&gt;
+						&amp;#x3C;/includes&gt;
+						&amp;#x3C;filtering&gt;false&amp;#x3C;/filtering&gt;
+					&amp;#x3C;/resource&gt;
+				&amp;#x3C;/resources&gt;
+			&amp;#x3C;/configuration&gt;
+		&amp;#x3C;/execution&gt;
+	&amp;#x3C;/executions&gt;
+&amp;#x3C;/plugin&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The runtime dependencies are:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;dependency&gt;
+	&amp;#x3C;groupId&gt;gg.jte&amp;#x3C;/groupId&gt;
+	&amp;#x3C;artifactId&gt;jte&amp;#x3C;/artifactId&gt;
+	&amp;#x3C;version&gt;${jte.version}&amp;#x3C;/version&gt;
+&amp;#x3C;/dependency&gt;
+&amp;#x3C;dependency&gt;
+	&amp;#x3C;groupId&gt;gg.jte&amp;#x3C;/groupId&gt;
+	&amp;#x3C;artifactId&gt;jte-spring-boot-starter-3&amp;#x3C;/artifactId&gt;
+	&amp;#x3C;version&gt;${jte.version}&amp;#x3C;/version&gt;
+&amp;#x3C;/dependency&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;controller-2&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#controller-2&quot; aria-label=&quot;controller 2 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Controller&lt;/h3&gt;
+&lt;p&gt;The controller implementation is very conventional - in fact it is identical to the one we used for Rocker.&lt;/p&gt;
+&lt;h3 id=&quot;jte-configuration&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#jte-configuration&quot; aria-label=&quot;jte configuration permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;JTE Configuration&lt;/h3&gt;
+&lt;p&gt;JTE comes with its own Spring Boot autoconfiguration (we added it in the &lt;code&gt;pom.xml&lt;/code&gt;), so you almost don&apos;t need to do anything else. There is one tiny thing you need to do to make it work with Spring Boot 3.x, which is to add a property to the &lt;code&gt;application.properties&lt;/code&gt; file. For development time, especially if you are using &lt;a href=&quot;https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using.devtools&quot;&gt;Spring Boot Devtools&lt;/a&gt;, you would want:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gg.jte.developmentMode=true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In production, switch that off with a Spring profile and use &lt;code&gt;gg.jte.usePrecompiledTemplates=true&lt;/code&gt; instead.&lt;/p&gt;
+&lt;h3 id=&quot;running-the-sample-2&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#running-the-sample-2&quot; aria-label=&quot;running the sample 2 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Running the Sample&lt;/h3&gt;
+&lt;p&gt;If you run the sample with &lt;code&gt;./mvnw spring-boot:run&lt;/code&gt; you will see the home page at &lt;code&gt;http://localhost:8080/&lt;/code&gt;. The generated source code comes out as one Java class per template in &lt;code&gt;target/generated-sources/jte/&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ tree target/generated-sources/jte/
+target/generated-sources/jte/
+戌式式 gg
+    戌式式 jte
+        戌式式 generated
+            戌式式 precompiled
+                戍式式 JtedemoGenerated.bin
+                戌式式 JtedemoGenerated.java
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;.bin&lt;/code&gt; file is an efficient binary representation of the text template that is used at runtime, so it needs to be added to the classpath.&lt;/p&gt;
+&lt;h3 id=&quot;native-image-2&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#native-image-2&quot; aria-label=&quot;native image 2 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Native Image&lt;/h3&gt;
+&lt;p&gt;A native image can be generated with some additional configuration. We need to make sure the &lt;code&gt;.bin&lt;/code&gt; files are available and also that the generated Java classes can be reflected on:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@SpringBootApplication
+@ImportRuntimeHints(DemoRuntimeHints.class)
+public class DemoApplication {
+	...
+}
+
+class DemoRuntimeHints implements RuntimeHintsRegistrar {
+
+	@Override
+	public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
+		hints.resources().registerPattern(&quot;**/*.bin&quot;);
+		hints.reflection().registerType(JtedemoGenerated.class, MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INVOKE_DECLARED_METHODS);
+	}
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So JTE is not completely reflection free, but it is possible to configure it quite easily to work with GraalVM native.&lt;/p&gt;
+&lt;h2 id=&quot;mantl&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#mantl&quot; aria-label=&quot;mantl permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;ManTL&lt;/h2&gt;
+&lt;p&gt;ManTL (Manifold Template Language) is another template engine with Java-like syntax. The templates are compiled to Java classes at build time like with the other samples. The home page looks like this (&lt;code&gt;Demo.html.mtl&lt;/code&gt;):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-html&quot;&gt;&amp;#x3C;%@ import demo.DemoModel %&gt;
+
+&amp;#x3C;%@ params(DemoModel model) %&gt;
+
+Hello ${model.name}!
+&amp;#x3C;br&gt;
+&amp;#x3C;br&gt;
+You are visitor number ${model.visits}.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;where &lt;code&gt;DemoModel&lt;/code&gt; is the same as in the other samples.&lt;/p&gt;
+&lt;h3 id=&quot;build-configuration-3&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#build-configuration-3&quot; aria-label=&quot;build configuration 3 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Build Configuration&lt;/h3&gt;
+&lt;p&gt;Manifold is a bit different to the other examples in that it uses a JDK compiler plugin, as opposed to an APT processor. The configuration in &lt;code&gt;pom.xml&lt;/code&gt; is a bit more complex. There is the &lt;code&gt;maven-compiler-plugin&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;plugin&gt;
+	&amp;#x3C;groupId&gt;org.apache.maven.plugins&amp;#x3C;/groupId&gt;
+	&amp;#x3C;artifactId&gt;maven-compiler-plugin&amp;#x3C;/artifactId&gt;
+	&amp;#x3C;version&gt;3.8.0&amp;#x3C;/version&gt;
+	&amp;#x3C;configuration&gt;
+		&amp;#x3C;compilerArgs&gt;
+			&amp;#x3C;arg&gt;-Xplugin:Manifold&amp;#x3C;/arg&gt;
+		&amp;#x3C;/compilerArgs&gt;
+		&amp;#x3C;annotationProcessorPaths&gt;
+			&amp;#x3C;path&gt;
+				&amp;#x3C;groupId&gt;systems.manifold&amp;#x3C;/groupId&gt;
+				&amp;#x3C;artifactId&gt;manifold-templates&amp;#x3C;/artifactId&gt;
+				&amp;#x3C;version&gt;${manifold.version}&amp;#x3C;/version&gt;
+			&amp;#x3C;/path&gt;
+		&amp;#x3C;/annotationProcessorPaths&gt;
+	&amp;#x3C;/configuration&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and the runtime dependency:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-xml&quot;&gt;&amp;#x3C;dependency&gt;
+	&amp;#x3C;groupId&gt;systems.manifold&amp;#x3C;/groupId&gt;
+	&amp;#x3C;artifactId&gt;manifold-templates-rt&amp;#x3C;/artifactId&gt;
+	&amp;#x3C;version&gt;${manifold.version}&amp;#x3C;/version&gt;
+&amp;#x3C;/dependency&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;controller-3&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#controller-3&quot; aria-label=&quot;controller 3 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Controller&lt;/h3&gt;
+&lt;p&gt;Our controller in this sample looks more like the JStachio one than the Rocker/JTE one:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;@GetMapping(&quot;/&quot;)
+public View view(Model model, HttpServletResponse response) {
+	visitsRepository.add();
+	return new StringView(() -&gt; Demo.render(new DemoModel(&quot;myst?rieux visiteur&quot;, visitsRepository.get())));
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;where &lt;code&gt;StringView&lt;/code&gt; is a convenience class that wraps the template and renders it:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-java&quot;&gt;public class StringView implements View {
+
+	private final Supplier&amp;#x3C;String&gt; output;
+
+	public StringView(Supplier&amp;#x3C;String&gt; output) {
+		this.output = output;
+	}
+
+	@Override
+	public void render(Map&amp;#x3C;String, ?&gt; model, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String result = output.get();
+		response.setContentType(MediaType.TEXT_HTML_VALUE);
+		response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+		response.setContentLength(result.getBytes().length);
+
+		response.getOutputStream().write(result.getBytes());
+		response.flushBuffer();
+	}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&quot;running-the-sample-3&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#running-the-sample-3&quot; aria-label=&quot;running the sample 3 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Running the Sample&lt;/h3&gt;
+&lt;p&gt;You can build and run the application on the command line using &lt;code&gt;./mvnw spring-boot:run&lt;/code&gt; and inspect the result on &lt;code&gt;http://localhost:8080&lt;/code&gt;. The generated source code comes out as a class and ancillary stuff per template:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ tree target/classes/templates/
+target/classes/templates/
+戍式式 Demo$LayoutOverride.class
+戍式式 Demo.class
+戌式式 Demo.html.mtl
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;ManTL only works in IntelliJ after installing a special plugin, and not at all in Eclipse or NetBeans or VSCode. You may be able to run the main method from those IDEs, but the code that refers to templates will have compiler errors because the compiler plugin is missing.&lt;/p&gt;
+&lt;h3 id=&quot;native-image-3&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#native-image-3&quot; aria-label=&quot;native image 3 permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Native Image&lt;/h3&gt;
+&lt;p&gt;The compiler plugin is not supported by GraalVM, so you can&apos;t use ManTL with GraalVM native images.&lt;/p&gt;
+&lt;h2 id=&quot;summary&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#summary&quot; aria-label=&quot;summary permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;Summary&lt;/h2&gt;
+&lt;p&gt;All the template engines we looked at here are reflection free in the sense that the templates are compiled to Java classes at build time. They are all easy to use and integrate with Spring, and they all have or can be provided with some kind of Spring Boot autoconfiguration. JStachio is the most lightweight and fastest at runtime, and it has the best support for GraalVM native images. Rocker is also very fast at runtime, but it uses reflection internally and it is not easy to get it to work with GraalVM. JTE is a bit more complex to configure, but it is also very fast at runtime and it is easy to get it to work with GraalVM. ManTL is the most complex to configure and it doesn&apos;t work with GraalVM at all. It also only works with IntelliJ as an IDE.&lt;/p&gt;
+&lt;p&gt;If you would like to see more samples then the each of the template engines has its own documentation, so follow the links above. My own work on JStachio has produced a few additional examples, for example the &lt;a href=&quot;https://github.com/spring-petclinic/spring-petclinic-mustache/tree/jstache&quot;&gt;Mustache PetClinic&lt;/a&gt;, and also a &lt;a href=&quot;https://github.com/dsyer/spring-todo-mvc/tree/jstachio&quot;&gt;Todo MVC&lt;/a&gt; implementation, originally by &lt;a href=&quot;https://github.com/odrotbohm&quot;&gt;Ollie Drotbohm&lt;/a&gt; and adapted to various different template engines.&lt;/p&gt;
+&lt;p&gt;Dave Syer&lt;br&gt;
+London 2024&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Modulith 1.2 M3 released]]></title><link>https://spring.io/blog/2024/03/22/spring-modulith-1-2-m3-released</link><guid isPermaLink="true">https://spring.io/blog/2024/03/22/spring-modulith-1-2-m3-released</guid><dc:creator><![CDATA[Oliver Drotbohm]]></dc:creator><pubDate>Fri, 22 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;I am happy to announce the availability of Spring Modulith 1.2 M3. It contains a couple of dependency upgrades, bug fixes but the following new features primarily:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-modulith/reference/1.2/fundamentals.html#modules.advanced.open&quot;&gt;Support for open application modules&lt;/a&gt; ? Application modules can now be declared as open, which gives other modules full access to the open module&apos;s internals. Primarily intended for scenarios in which Spring Modulith is introduced in existing, sub-optimally structured projects.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.spring.io/spring-modulith/reference/1.2/fundamentals.html#modules.named-interfaces&quot;&gt;Support for package info types&lt;/a&gt; ? Kotlin does not directly support annotating packages as it doesn&apos;t know an equivalent of &lt;code&gt;package-info.java&lt;/code&gt;. Package-level configuration annotations such as &lt;code&gt;@ApplicationModule&lt;/code&gt; or &lt;code&gt;@NamedInterface&lt;/code&gt; can now be used on types annotated with &lt;code&gt;@PackageInfo&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;@ApplicationModuleListener&lt;/code&gt; now exposes &lt;code&gt;@EventListener&lt;/code&gt;&apos;s &lt;code&gt;condition&lt;/code&gt; attribute.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For more details check out the full &lt;a href=&quot;https://github.com/spring-projects/spring-modulith/releases/tag/1.2.0-M3&quot;&gt;change log&lt;/a&gt; and the &lt;a href=&quot;https://docs.spring.io/spring-modulith/reference/1.2/index.html&quot;&gt;reference documentation&lt;/a&gt;.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Spring Boot 3.3.0-M3 available now]]></title><link>https://spring.io/blog/2024/03/22/spring-boot-3-3-0-m3-available-now</link><guid isPermaLink="true">https://spring.io/blog/2024/03/22/spring-boot-3-3-0-m3-available-now</guid><dc:creator><![CDATA[Phil Webb]]></dc:creator><pubDate>Fri, 22 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;On behalf of the team and everyone who has contributed, I&apos;m happy to announce that Spring Boot &lt;code&gt;3.3.0-M3&lt;/code&gt; has been released and is now available from &lt;a href=&quot;https://repo.spring.io/milestone&quot;&gt;https://repo.spring.io/milestone&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;This release includes &lt;a href=&quot;https://github.com/spring-projects/spring-boot/releases/tag/v3.3.0-M3&quot;&gt;70 enhancements, documentation improvements, dependency upgrades, and bug fixes&lt;/a&gt;. Notable new features include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Support for CDS archives&lt;/li&gt;
+&lt;li&gt;Base64 Resources&lt;/li&gt;
+&lt;li&gt;SBOM Actuator Endpoint&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Please see the &lt;a href=&quot;https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.3.0-M3-Release-Notes&quot;&gt;release notes&lt;/a&gt; for more details and upgrade instructions.&lt;/p&gt;
+&lt;p&gt;NOTE: We are in the process of migrating the Spring Boot documentation to Antora. The docs for this release will be a little delayed.&lt;/p&gt;
+&lt;p&gt;Thanks to all those who have contributed with issue reports and pull requests.&lt;/p&gt;
+&lt;h3 id=&quot;how-can-you-help&quot; style=&quot;position:relative;&quot;&gt;&lt;a href=&quot;#how-can-you-help&quot; aria-label=&quot;how can you help permalink&quot; class=&quot;anchor before&quot;&gt;&lt;svg aria-hidden=&quot;true&quot; focusable=&quot;false&quot; height=&quot;16&quot; version=&quot;1.1&quot; viewBox=&quot;0 0 16 16&quot; width=&quot;16&quot;&gt;&lt;path fill-rule=&quot;evenodd&quot; d=&quot;M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/a&gt;How can you help?&lt;/h3&gt;
+&lt;p&gt;If you&apos;re interested in helping out, check out the &lt;a href=&quot;https://github.com/spring-projects/spring-boot/labels/status%3A%20ideal-for-contribution&quot;&gt;&quot;ideal for contribution&quot; tag&lt;/a&gt; in the issue repository. If you have general questions, please ask on &lt;a href=&quot;https://stackoverflow.com&quot;&gt;stackoverflow.com&lt;/a&gt; using the &lt;a href=&quot;https://stackoverflow.com/tags/spring-boot&quot;&gt;&lt;code&gt;spring-boot&lt;/code&gt; tag&lt;/a&gt; or chat with the community on &lt;a href=&quot;https://gitter.im/spring-projects/spring-boot&quot;&gt;Gitter&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://spring.io/projects/spring-boot/&quot;&gt;Project Page&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-boot&quot;&gt;GitHub&lt;/a&gt; | &lt;a href=&quot;https://github.com/spring-projects/spring-boot/issues&quot;&gt;Issues&lt;/a&gt; | &lt;a href=&quot;https://stackoverflow.com/questions/tagged/spring-boot&quot;&gt;Stack Overflow&lt;/a&gt; | &lt;a href=&quot;https://gitter.im/spring-projects/spring-boot&quot;&gt;Gitter&lt;/a&gt;&lt;/p&gt;</content:encoded></item></channel></rss>
