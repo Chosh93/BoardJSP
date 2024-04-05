@@ -22,6 +22,7 @@ public class CalendarServiceImpl implements CalendarService{
 	// 스케쥴 목록
 	@Override
 	public List<CalendarVo> schedule(String year, String month) throws Exception {
+		System.out.println("serviceImpl 진입");
 		return calendarDao.scheduleList(year, month);
 	}
 }

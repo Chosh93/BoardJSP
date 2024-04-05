@@ -31,8 +31,9 @@ public class CalendarController {
 	@RequestMapping(value = "/getSchedule", method = RequestMethod.POST)
 	public String getSchedule(Model model, String year, String month) throws Exception{
 		logger.info("/getSchedule 진입");
+		System.out.println(year + " " + month);
 		List<CalendarVo> test = calendarService.schedule(year, month);
 		model.addAttribute("scheduleList", test);
-		return "/calendar";
+		return "calendar";
 	}
 }

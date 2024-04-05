@@ -18,8 +18,8 @@
   			FROM 
   				SCHEDULES
   			WHERE
-  				CALYEAR = #{calyear}
+  				CALYEAR = #{year}
   			AND
-  				CALMONTH = #{calmonth}
+  				CALMONTH = #{month}
   		</select>
   	</mapper>

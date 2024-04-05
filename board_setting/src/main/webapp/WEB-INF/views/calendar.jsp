@@ -132,7 +132,7 @@ $(document).ready(function() {
     $.ajax({
         type: "POST",
         url: "<%=request.getContextPath()%>/getSchedule",
-        data: { year: <%=year%>, month: <%=month%> },
+        data: { year: <%=year%>, month: <%=month + 1%> },
         dataType: "json",
         success: function(data) {
             console.log(data);
