@@ -2,6 +2,7 @@ package woo.edu.c.controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -184,24 +185,7 @@ public class BoardController {
 	   logger.info("/calc 페이지 이동");
    }
    
-   // 캘린더 페이지 이동
-   @RequestMapping(value = "/calendar", method = RequestMethod.GET)
-   public String moveCalendar(Model model) throws Exception {
-	   logger.info("/calendar 페이지 이동");
-	   Calendar today = Calendar.getInstance();
-	   int year = today.get(Calendar.YEAR);
-	   int month = today.get(Calendar.MONTH)+1;
-	   today.set(Calendar.DATE, 1);
-	   int firstDay = today.get(Calendar.DAY_OF_WEEK);
-	   int lastDay = today.getActualMaximum(Calendar.DATE);
 
-	   model.addAttribute("year", year);
-	   model.addAttribute("month", month);
-	   model.addAttribute("firstDay", firstDay);
-	   model.addAttribute("lastDay", lastDay);
-	   
-	   return "/calendar";
-   }
 }
 
 
