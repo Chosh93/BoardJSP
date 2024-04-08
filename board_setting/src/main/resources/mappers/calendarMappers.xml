@@ -16,7 +16,7 @@
   				TO_CHAR(CALDATE, 'yyyy-MM-dd HH24:mi:ss') AS CALDATE,
   				CALCONTENTS
   			FROM 
-  				SCHEDULES
+  				TEST.SCHEDULES
   			WHERE
   				CALYEAR = #{year}
   			AND
