@@ -104,7 +104,7 @@
                     <%
                             }else {
                     %>
-                                <%=i-startBlankCnt%>
+                                <span><%=i-startBlankCnt%></span>
                     <%
                             }   
                         } else {
@@ -135,11 +135,22 @@ $(document).ready(function() {
         data: { year: <%=year%>, month: <%=month + 1%> },
         dataType: "json",
         success: function(data) {
-            console.log(data);
+            $.each(data, function(index, item){
+                var year = item.calyear;
+                var month = item.calmonth;
+                var day = item.calday;
+                if(year === "<%=year%>" && month === "<%=month+1%>"){
+                    $("td").each(function() {
+                        var tdText = $(this).find("span").text(); // td 내의 span 요소의 텍스트 값 가져오기
+                        if (tdText === day) {
+                        	$(this).addClass("bg-success p-2 text-dark bg-opacity-50");
+                        }
+                    });
+                }
+            })
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
-            console.log(<%=year%> + " " + <%=month + 1%>);
         }
     });
 });

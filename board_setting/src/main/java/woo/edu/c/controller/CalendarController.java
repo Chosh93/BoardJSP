@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import woo.edu.c.service.CalendarService;
 import woo.edu.c.vo.CalendarVo;
@@ -29,11 +30,11 @@ public class CalendarController {
     }
 	// 스케쥴 가져오기
 	@RequestMapping(value = "/getSchedule", method = RequestMethod.POST)
-	public String getSchedule(Model model, String year, String month) throws Exception{
+	@ResponseBody
+	public List<CalendarVo> getSchedule(String year, String month) throws Exception{
 		logger.info("/getSchedule 진입");
 		List<CalendarVo> test = calendarService.schedule(year, month);
 		System.out.println(test);
-		model.addAttribute("scheduleList", test);
-		return "calendar";
+		return test;
 	}
 }
