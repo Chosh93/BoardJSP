@@ -28,13 +28,23 @@ public class CalendarController {
 	    logger.info("/calendar 페이지 이동");
  	    return "calendar";
     }
-	// 스케쥴 가져오기
+    
+	// 전체 스케쥴 가져오기
+	@RequestMapping(value = "/getAllSchedule", method = RequestMethod.POST)
+	@ResponseBody
+	public List<CalendarVo> getAllSchedule(String year, String month) throws Exception{
+		logger.info("/getAllSchedule 진입");
+		List<CalendarVo> allscheduleList = calendarService.allSchedule(year, month);
+		return allscheduleList;
+	}
+	
+	// 해당 날짜 스케줄 가져오기
 	@RequestMapping(value = "/getSchedule", method = RequestMethod.POST)
 	@ResponseBody
-	public List<CalendarVo> getSchedule(String year, String month) throws Exception{
+	public List<CalendarVo> getSchedule(String year, String month, String day) throws Exception{
 		logger.info("/getSchedule 진입");
-		List<CalendarVo> test = calendarService.schedule(year, month);
-		System.out.println(test);
-		return test;
+		List<CalendarVo> scheduleList = calendarService.schedule(year, month, day);
+		System.out.println(scheduleList);
+		return scheduleList;
 	}
 }

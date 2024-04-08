@@ -19,9 +19,15 @@ public class CalendarServiceImpl implements CalendarService{
 	@Resource
 	private CalendarDao calendarDao;
 	
-	// 스케쥴 목록
+	// 전체 스케쥴 목록
 	@Override
-	public List<CalendarVo> schedule(String year, String month) throws Exception {
-		return calendarDao.scheduleList(year, month);
+	public List<CalendarVo> allSchedule(String year, String month) throws Exception {
+		return calendarDao.allScheduleList(year, month);
+	}
+	
+	// 해당 날 스케줄 목록
+	@Override
+	public List<CalendarVo> schedule(String year, String month, String day) throws Exception {
+		return calendarDao.scheduleList(year, month, day);
 	}
 }

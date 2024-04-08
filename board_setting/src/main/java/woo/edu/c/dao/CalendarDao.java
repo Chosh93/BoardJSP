@@ -6,5 +6,7 @@ import woo.edu.c.vo.CalendarVo;
 
 public interface CalendarDao {
 	
-	List<CalendarVo> scheduleList(String year, String month) throws Exception;
+	List<CalendarVo> allScheduleList(String year, String month) throws Exception;
+	
+	List<CalendarVo> scheduleList(String year, String month, String day) throws Exception;
 }

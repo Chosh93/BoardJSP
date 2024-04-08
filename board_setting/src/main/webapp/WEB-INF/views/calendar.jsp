@@ -54,10 +54,21 @@
         height:100px;
         cursor: pointer;
      }
+     
      th{
         height:30px;
         font-weight: normal;
      }
+     
+     #scheduleTable td{
+     	height:30px;
+     }
+     
+     #importantCheckbox:checked + #importantLabel::before {
+    content: "*";
+    color: red; /* * 표시의 색상 */
+}
+     
 </style>
 </head>
 <body>
@@ -91,9 +102,12 @@
                 <%
                     for(int i=1; i<=tdCnt; i++) {
                 %>
-                <td onclick="showDate('<%= year %>-<%= month+1 %>-<%= i-startBlankCnt %>')">
+                <%
+                    boolean isEmpty = (i <= startBlankCnt || i > startBlankCnt + lastDate);
+                %>
+                <td<% if (!isEmpty) { %> onclick="showModal(<%= year %>,<%= month+1 %>,<%= i-startBlankCnt %>)" <% } %>>
                     <%
-                        if(i>startBlankCnt && i<=startBlankCnt+lastDate) {
+                        if (!isEmpty) {
                             if(i%7 == 0) {
                     %>
                                 <span class="text-primary"><%=i-startBlankCnt%></span>
@@ -126,15 +140,49 @@
         </table>
     </div>
 </div>
+<div class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">스케줄 입력</h5>
+        <p></p>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal();"></button>
+      </div>
+      <div class="modal-body">
+        <table style="width:100%; padding:0;">
+        	<tr>
+        		<th style="width:20%;"><b>시간</b></th>
+        		<th style="width:60%;"><b>내용</b></th>
+        		<th style="width:10%;"><b>중요</b></th>
+        		<th style="width:10%;"><b>삭제</b></th>
+        	</tr>
+        	<tbody id="scheduleTable"></tbody>
+        </table>
+        <br>
+        <label>시간</label><br>
+        <input type="time"><br><br>
+        <label>내용</label><br>
+      	<input style="width:100%;" type="text" placeholder="스케줄 내용을 입력해 주세요."><br><br>
+      	<input type="checkbox" id="importantCheckbox">
+		<label>중요 스케줄(체크시 *표시 됩니다.)</label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal();">취소</button>
+        <button type="button" class="btn btn-primary">저장</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 <script>
 $(document).ready(function() {
     $.ajax({
         type: "POST",
-        url: "<%=request.getContextPath()%>/getSchedule",
+        url: "<%=request.getContextPath()%>/getAllSchedule",
         data: { year: <%=year%>, month: <%=month + 1%> },
         dataType: "json",
         success: function(data) {
+        	console.log(data);
             $.each(data, function(index, item){
                 var year = item.calyear;
                 var month = item.calmonth;
@@ -154,8 +202,44 @@ $(document).ready(function() {
         }
     });
 });
-function showDate(date){
-    console.log(date);    
+function showModal(year, month, day){
+    loadSchedule(year, month, day);
+    $(".modal").css("display", "block");
+}
+function closeModal() {
+	$(".modal").css("display", "none");
+}
+
+function loadSchedule(year, month, day) {
+	console.log(year, month, day);
+    $.ajax({
+        type: "POST",
+        url: "<%=request.getContextPath()%>/getSchedule",
+        data: { year: year, month: month, day: day },
+        dataType: "json",
+        success: function(data) {
+            var tableBody = $("#scheduleTable");
+            console.log(data);
+            tableBody.empty(); // 테이블 내용 초기화
+
+            // 스케줄 데이터를 테이블에 추가
+            $.each(data, function(index, item) {
+                var row = $("<tr>");
+                row.append($("<td>").text(item.caltime));
+                row.append($("<td>").text(item.calcontents));
+                row.append($("<td>").text(item.important ? "중요" : "일반"));
+                var deleteButton = $("<button>").text("삭제").click(function() {
+                    // 삭제 버튼 클릭 시 해당 스케줄 삭제
+                    deleteSchedule(item.id);
+                });
+                row.append($("<td>").append(deleteButton));
+                tableBody.append(row);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
 }
 </script>
 </html>

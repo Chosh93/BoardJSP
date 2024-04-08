@@ -5,7 +5,7 @@
   
   	<mapper namespace="calendarMapper">
   		<!-- 스케쥴 목록 -->
-  		<select id="calendar" resultType="calendarVo">
+  		<select id="scheduleAll" resultType="calendarVo">
   			SELECT
   				CALNO,
   				CALYEAR,
@@ -21,5 +21,25 @@
   				CALYEAR = #{year}
   			AND
   				CALMONTH = #{month}
+  		</select>
+  		
+  		<select id="schedule" resultType="calendarVo">
+  			SELECT
+  				CALNO,
+  				CALYEAR,
+  				CALMONTH,
+  				CALDAY,
+  				CALTIME,
+  				CALREQ,
+  				TO_CHAR(CALDATE, 'yyyy-MM-dd HH24:mi:ss') AS CALDATE,
+  				CALCONTENTS
+  			FROM 
+  				TEST.SCHEDULES
+  			WHERE
+  				CALYEAR = #{year}
+  			AND
+  				CALMONTH = #{month}
+  			AND
+  				CALDAY = #{day}
   		</select>
   	</mapper>

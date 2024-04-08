@@ -25,11 +25,20 @@ public class CalendarDaoImpl implements CalendarDao {
 	
 	// 스케쥴 목록
 	@Override
-	public List<CalendarVo> scheduleList(String year, String month) {
-	    logger.info("daoImpl 진입");
+	public List<CalendarVo> allScheduleList(String year, String month) {
 	    Map<String, String> params = new HashMap<String, String>();
 	    params.put("year", year);
 	    params.put("month", month);
-	    return sql.selectList(namespace + ".calendar", params);
+	    return sql.selectList(namespace + ".scheduleAll", params);
+	}
+	
+	@Override
+	public List<CalendarVo> scheduleList(String year, String month, String day){
+		Map<String, String> params = new HashMap<String, String>();
+		System.out.println("daoImpl 진입");
+	    params.put("year", year);
+	    params.put("month", month);
+	    params.put("day", day);
+	    return sql.selectList(namespace + ".schedule", params);
 	}
 }
