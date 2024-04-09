@@ -159,16 +159,18 @@
         	<tbody id="scheduleTable"></tbody>
         </table>
         <br>
-        <label>시간</label><br>
-        <input type="time"><br><br>
-        <label>내용</label><br>
-      	<input style="width:100%;" type="text" placeholder="스케줄 내용을 입력해 주세요."><br><br>
-      	<input type="checkbox" id="importantCheckbox">
-		<label>중요 스케줄(체크시 *표시 됩니다.)</label>
+        <div class="modal-input">
+	        <label>시간</label><br>
+	        <input type="time"><br><br>
+	        <label>내용</label><br>
+	      	<input style="width:100%;" type="text" placeholder="스케줄 내용을 입력해 주세요."><br><br>
+	      	<input type="checkbox" id="importantCheckbox">
+			<label>중요 스케줄(체크시 <font color="#ff0000">*</font>표시 됩니다.)</label>
+		</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal();">취소</button>
-        <button type="button" class="btn btn-primary">저장</button>
+        <button type="button" class="btn btn-primary" onclick="saveSchedule();">저장</button>
       </div>
     </div>
   </div>
@@ -205,9 +207,15 @@ $(document).ready(function() {
 function showModal(year, month, day){
     loadSchedule(year, month, day);
     $(".modal").css("display", "block");
+    $(".modal").data("year", year);
+    $(".modal").data("month", month);
+    $(".modal").data("day", day);
 }
 function closeModal() {
 	$(".modal").css("display", "none");
+	$('input[type="time"]').val('');
+    $('input[type="text"]').val('');
+    $('input[type="checkbox"]').prop('checked', false);
 }
 
 function loadSchedule(year, month, day) {
@@ -240,6 +248,44 @@ function loadSchedule(year, month, day) {
             console.error('Error:', error);
         }
     });
+}
+
+function saveSchedule() {
+	var time = $('input[type="time"]').val();
+	var contents = $('input[type="text"]').val();
+	var reg = $('input[type="checkbox"]').prop('checked');
+	var msg = "";
+
+    if (time === "") {
+    	msg += "시간, ";
+    }
+    if (contents === "") {
+    	msg += "내용, ";
+    }
+
+    if (msg !== "") {
+    	msg = msg.slice(0, -2); // 마지막 쉼표와 공백 제거
+        alert(msg + "을(를) 입력하세요."); // 누락된 입력값을 알림에 출력
+        return false;
+    }
+   	$.ajax({
+        type: 'POST',
+        url: 'calendar/write',
+        data: {
+            	calyear: $(".modal").data("year"),
+            	calmonth: $(".modal").data("month"),
+            	calday: $(".modal").data("day"),
+            	caltime: $('input[type="time"]').val(),
+            	calreq: $('input[type="checkbox"]').prop('checked'),
+            	calcontents: $('input[type="text"]').val()
+            	},
+      	success: function(response) {
+          	console.log("저장 성공");
+        },
+        error: function(xhr, status, error) {
+            console.log("저장 실패");
+        }
+   	});
 }
 </script>
 </html>

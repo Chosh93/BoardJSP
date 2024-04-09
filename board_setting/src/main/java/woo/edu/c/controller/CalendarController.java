@@ -47,4 +47,16 @@ public class CalendarController {
 		System.out.println(scheduleList);
 		return scheduleList;
 	}
+	
+	// 스케줄 작성
+	@RequestMapping(value = "/calendar/write", method = RequestMethod.POST)
+	@ResponseBody
+	public void writeSchedule(String calyear, String calmonth, String calday, String caltime, String calreq, String calcontents) throws Exception {
+		System.out.println(calyear);
+		System.out.println(calmonth);
+		System.out.println(calday);
+		System.out.println(caltime);
+		System.out.println(calreq);
+		System.out.println(calcontents);
+	}
 }
