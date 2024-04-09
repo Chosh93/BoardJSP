@@ -14,4 +14,8 @@ public interface CalendarService {
 	
 	// 스케줄 작성
 	void writeSchedule(CalendarVo vo) throws Exception;
+	
+	// 스케줄 삭제
+	
+	void deleteSchedule(int calno) throws Exception;
 }

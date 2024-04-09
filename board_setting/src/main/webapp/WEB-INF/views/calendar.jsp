@@ -140,12 +140,13 @@
         </table>
     </div>
 </div>
-<div class="modal" tabindex="-1">
+<!-- <div class="modal" tabindex="-1">-->
+<div class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">스케줄 입력</h5>
-        <p></p>
+        <p class="modal-ymd"></p>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal();"></button>
       </div>
       <div class="modal-body">
@@ -181,6 +182,7 @@ $(document).ready(function() {
 	getAllSchedule();
 });
 
+// 현재 월 스케줄 전부 가져오기
 function getAllSchedule(){
 	$.ajax({
         type: "POST",
@@ -208,20 +210,8 @@ function getAllSchedule(){
         }
     });
 }
-function showModal(year, month, day){
-    loadSchedule(year, month, day);
-    $(".modal").css("display", "block");
-    $(".modal").data("year", year);
-    $(".modal").data("month", month);
-    $(".modal").data("day", day);
-}
-function closeModal() {
-	$(".modal").css("display", "none");
-	$('input[type="time"]').val('');
-    $('input[type="text"]').val('');
-    $('input[type="checkbox"]').prop('checked', false);
-}
 
+// 해당 날짜 스케줄 가져오기
 function loadSchedule(year, month, day) {
 	console.log(year, month, day);
     $.ajax({
@@ -239,10 +229,9 @@ function loadSchedule(year, month, day) {
                 var row = $("<tr>");
                 row.append($("<td>").text(item.caltime));
                 row.append($("<td>").text(item.calcontents));
-                row.append($("<td>").text(item.important ? "중요" : "일반"));
+                row.append($("<td>").text(item.calreq === 'true' ? "중요" : "일반"));
                 var deleteButton = $("<button>").text("삭제").click(function() {
-                    // 삭제 버튼 클릭 시 해당 스케줄 삭제
-                    deleteSchedule(item.id);
+                	deleteSchedule(item.calno);
                 });
                 row.append($("<td>").append(deleteButton));
                 tableBody.append(row);
@@ -254,6 +243,7 @@ function loadSchedule(year, month, day) {
     });
 }
 
+//스케줄 작성
 function saveSchedule() {
 	var time = $('input[type="time"]').val();
 	var contents = $('input[type="text"]').val();
@@ -287,13 +277,62 @@ function saveSchedule() {
         data: JSON.stringify(dataForm),
       	success: function(response) {
           	console.log("저장 성공");
-          	getAllSchedule();
           	closeModal();
         },
         error: function(xhr, status, error) {
             console.log("저장 실패");
         }
    	});
+}
+
+// 스케줄 삭제
+function deleteSchedule(calno){
+	var dataForm = {
+	   		calno: calno,
+	   		calyear: $(".modal").data("year"),
+	       	calmonth: $(".modal").data("month"),
+	       	calday: $(".modal").data("day")
+	   	}
+   	$.ajax({
+   	   	type: 'POST',
+   	   	url: 'calendar/delete',
+   	   	contentType: 'application/json',
+   	   	data: JSON.stringify(dataForm),
+   	   	success: function(response){
+   	   	   	console.log("삭제 성공");
+   	   		loadSchedule($(".modal").data("year"), $(".modal").data("month"), $(".modal").data("day"));
+   	   		updateCalendar($(".modal").data("year"), $(".modal").data("month"), $(".modal").data("day"));
+   	   	},
+   	   	error: function(xhr, status, error) {
+   	   	   	console.log("삭제 실패");
+   	   	}
+	});
+}
+
+function updateCalendar(year, month, day) {
+    var dateCell = $("td").filter(function() {
+        var spanText = $(this).find("span").text();
+        return spanText === day.toString();
+    });
+
+    // 해당 td 요소의 클래스 제거
+    dateCell.removeClass("bg-success p-2 text-dark bg-opacity-50");
+}
+
+function showModal(year, month, day){
+    loadSchedule(year, month, day);
+    $(".modal").css("display", "block");
+    $(".modal").data("year", year);
+    $(".modal").data("month", month);
+    $(".modal").data("day", day);
+    $(".modal-ymd").html(year + "년 " + month + "월 " + day + "일");
+}
+function closeModal() {
+	$(".modal").css("display", "none");
+	$('input[type="time"]').val('');
+    $('input[type="text"]').val('');
+    $('input[type="checkbox"]').prop('checked', false);
+    getAllSchedule();
 }
 </script>
 </html>

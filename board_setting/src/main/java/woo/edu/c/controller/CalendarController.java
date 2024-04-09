@@ -54,8 +54,17 @@ public class CalendarController {
 	@ResponseBody
 	public List<CalendarVo> writeSchedule(@RequestBody CalendarVo vo) throws Exception {
 		logger.info("스케줄 작성 ajax");
-		System.out.println(vo);
 		calendarService.writeSchedule(vo);
+		List<CalendarVo> scheduleList = calendarService.allSchedule(vo.getCalyear(), vo.getCalmonth());
+		return scheduleList;
+	}
+	
+	// 스케줄 삭제
+	@RequestMapping(value = "calendar/delete", method = RequestMethod.POST)
+	@ResponseBody
+	public List<CalendarVo> deleteSchedule(@RequestBody CalendarVo vo) throws Exception{
+		logger.info("스케줄 삭제 ajax");
+		calendarService.deleteSchedule(vo.getCalno());
 		List<CalendarVo> scheduleList = calendarService.allSchedule(vo.getCalyear(), vo.getCalmonth());
 		return scheduleList;
 	}

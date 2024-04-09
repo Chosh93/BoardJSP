@@ -21,6 +21,8 @@
   				CALYEAR = #{year}
   			AND
   				CALMONTH = #{month}
+  			AND
+  				CALISDEL = 'N'
   		</select>
   		
   		<!-- 스케쥴 목록 -->
@@ -42,6 +44,8 @@
   				CALMONTH = #{month}
   			AND
   				CALDAY = #{day}
+  			AND
+  				CALISDEL = 'N'
   		</select>
   		
   		<!-- 스케쥴 작성 -->
@@ -67,4 +71,12 @@
   				#{calcontents}
   			)
   		</insert>
+  		
+  		<!-- 스케쥴 작성 -->
+  		<update id="delete">
+  			UPDATE TEST.SCHEDULES
+  			SET
+  				CALISDEL = 'Y'
+  			WHERE CALNO = #{calno}
+  		</update>
   	</mapper>

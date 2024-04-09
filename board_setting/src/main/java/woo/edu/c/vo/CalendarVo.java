@@ -12,6 +12,8 @@ public class CalendarVo {
 	private String calreq;
 	private Date caldate;
 	private String calcontents;
+	private String calisdel;
+	
 	public int getCalno() {
 		return calno;
 	}
@@ -60,13 +62,16 @@ public class CalendarVo {
 	public void setCalcontents(String calcontents) {
 		this.calcontents = calcontents;
 	}
+	public String getCalisdel() {
+		return calisdel;
+	}
+	public void setCalisdel(String calisdel) {
+		this.calisdel = calisdel;
+	}
 	@Override
 	public String toString() {
 		return "CalendarVo [calno=" + calno + ", calyear=" + calyear + ", calmonth=" + calmonth + ", calday=" + calday
 				+ ", caltime=" + caltime + ", calreq=" + calreq + ", caldate=" + caldate + ", calcontents="
-				+ calcontents + "]";
+				+ calcontents + ", calisdel=" + calisdel + "]";
 	}
-	
-	
-	
 }

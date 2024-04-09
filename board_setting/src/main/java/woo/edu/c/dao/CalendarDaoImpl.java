@@ -45,4 +45,9 @@ public class CalendarDaoImpl implements CalendarDao {
 	public void writeSchedule(CalendarVo vo) throws Exception {
 		sql.insert(namespace + ".write", vo);
 	}
+	
+	@Override
+	public void deleteSchedule(int calno) {
+		sql.delete(namespace + ".delete", calno);
+	}
 }

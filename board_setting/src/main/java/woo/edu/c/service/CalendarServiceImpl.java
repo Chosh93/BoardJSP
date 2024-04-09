@@ -36,4 +36,10 @@ public class CalendarServiceImpl implements CalendarService{
 	public void writeSchedule(CalendarVo vo) throws Exception {
 		calendarDao.writeSchedule(vo);
 	}
+	
+	// 스케줄 삭제
+	@Override
+	public void deleteSchedule(int calno) throws Exception {
+		calendarDao.deleteSchedule(calno);
+	}
 }
