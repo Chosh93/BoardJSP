@@ -19,6 +19,7 @@
 	</li>
 	<li role="presentation" class="calc"><a href="/calc">계산기</a></li>
 	<li role="presentation" class="calendar"><a href="/calendar">캘린더</a></li>
+	<li role="presentation" class="search"><a href="/search">검색</a></li>
 </ul>
 <script>
 $(document).ready(function() {
@@ -37,6 +38,9 @@ $(document).ready(function() {
 	}
 	else if(loc.indexOf("calendar") > -1){
 		$(".calendar").addClass("active");
+	}
+	else if(loc.indexOf("search") > -1){
+		$(".search").addClass("active");
 	}
 	else if(loc === ""){
 		$(".home").addClass("active");
