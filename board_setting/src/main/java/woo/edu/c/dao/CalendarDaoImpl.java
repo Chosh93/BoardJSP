@@ -35,10 +35,14 @@ public class CalendarDaoImpl implements CalendarDao {
 	@Override
 	public List<CalendarVo> scheduleList(String year, String month, String day){
 		Map<String, String> params = new HashMap<String, String>();
-		System.out.println("daoImpl 진입");
 	    params.put("year", year);
 	    params.put("month", month);
 	    params.put("day", day);
 	    return sql.selectList(namespace + ".schedule", params);
+	}
+	
+	@Override
+	public void writeSchedule(CalendarVo vo) throws Exception {
+		sql.insert(namespace + ".write", vo);
 	}
 }

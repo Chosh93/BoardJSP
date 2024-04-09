@@ -178,7 +178,11 @@
 </body>
 <script>
 $(document).ready(function() {
-    $.ajax({
+	getAllSchedule();
+});
+
+function getAllSchedule(){
+	$.ajax({
         type: "POST",
         url: "<%=request.getContextPath()%>/getAllSchedule",
         data: { year: <%=year%>, month: <%=month + 1%> },
@@ -203,7 +207,7 @@ $(document).ready(function() {
             console.error('Error:', error);
         }
     });
-});
+}
 function showModal(year, month, day){
     loadSchedule(year, month, day);
     $(".modal").css("display", "block");
@@ -268,19 +272,23 @@ function saveSchedule() {
         alert(msg + "을(를) 입력하세요."); // 누락된 입력값을 알림에 출력
         return false;
     }
+    var dataForm = {
+   		calyear: $(".modal").data("year"),
+       	calmonth: $(".modal").data("month"),
+       	calday: $(".modal").data("day"),
+       	caltime: $('input[type="time"]').val(),
+       	calreq: $('input[type="checkbox"]').prop('checked'),
+       	calcontents: $('input[type="text"]').val()
+   	}
    	$.ajax({
         type: 'POST',
         url: 'calendar/write',
-        data: {
-            	calyear: $(".modal").data("year"),
-            	calmonth: $(".modal").data("month"),
-            	calday: $(".modal").data("day"),
-            	caltime: $('input[type="time"]').val(),
-            	calreq: $('input[type="checkbox"]').prop('checked'),
-            	calcontents: $('input[type="text"]').val()
-            	},
+        contentType: 'application/json',
+        data: JSON.stringify(dataForm),
       	success: function(response) {
           	console.log("저장 성공");
+          	getAllSchedule();
+          	closeModal();
         },
         error: function(xhr, status, error) {
             console.log("저장 실패");

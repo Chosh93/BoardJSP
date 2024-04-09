@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,12 +52,11 @@ public class CalendarController {
 	// 스케줄 작성
 	@RequestMapping(value = "/calendar/write", method = RequestMethod.POST)
 	@ResponseBody
-	public void writeSchedule(String calyear, String calmonth, String calday, String caltime, String calreq, String calcontents) throws Exception {
-		System.out.println(calyear);
-		System.out.println(calmonth);
-		System.out.println(calday);
-		System.out.println(caltime);
-		System.out.println(calreq);
-		System.out.println(calcontents);
+	public List<CalendarVo> writeSchedule(@RequestBody CalendarVo vo) throws Exception {
+		logger.info("스케줄 작성 ajax");
+		System.out.println(vo);
+		calendarService.writeSchedule(vo);
+		List<CalendarVo> scheduleList = calendarService.allSchedule(vo.getCalyear(), vo.getCalmonth());
+		return scheduleList;
 	}
 }

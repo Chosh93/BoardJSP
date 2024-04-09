@@ -11,4 +11,7 @@ public interface CalendarService {
 	
 	// 해당 날 스케쥴 목록
 	List<CalendarVo> schedule(String year, String month, String day) throws Exception;
+	
+	// 스케줄 작성
+	void writeSchedule(CalendarVo vo) throws Exception;
 }

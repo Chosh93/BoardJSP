@@ -30,4 +30,10 @@ public class CalendarServiceImpl implements CalendarService{
 	public List<CalendarVo> schedule(String year, String month, String day) throws Exception {
 		return calendarDao.scheduleList(year, month, day);
 	}
+	
+	// 스케줄 작성
+	@Override
+	public void writeSchedule(CalendarVo vo) throws Exception {
+		calendarDao.writeSchedule(vo);
+	}
 }
