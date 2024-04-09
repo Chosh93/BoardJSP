@@ -20,6 +20,10 @@
 		<li role="presentation" class="vclip"><a href="/calendar">동영상</a></li>
 		<li role="presentation" class="image"><a href="/search">이미지</a></li>
 	</ul>
+	
+	<div class="web-search">
+		<h1 class="web-search-title"></h1>
+	</div>
 </div>
 </body>
 <script>
