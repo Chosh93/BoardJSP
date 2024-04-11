@@ -26,9 +26,9 @@
 		<button onclick="searchWeb();" style="margin-left: 10px;">검색</button>
 	</div>
 	<ul class="nav nav-tabs" style="margin-top: 40px;">
-		<li role="presentation" class="web"><a onclick="searchWeb();">웹 문서</a></li>
-		<li role="presentation" class="vclip"><a onclick="searchVclip();">동영상</a></li>
-		<li role="presentation" class="image"><a onclick="searchImage();">이미지</a></li>
+		<li role="presentation" class="web"><a onclick="searchWeb();" style="cursor: pointer">웹 문서</a></li>
+		<li role="presentation" class="vclip"><a onclick="searchVclip();" style="cursor: pointer">동영상</a></li>
+		<li role="presentation" class="image"><a onclick="searchImage();" style="cursor: pointer">이미지</a></li>
 	</ul>
 	<div class="web-search" style="padding-top: 30px;"></div>
 	<div class="more-search" style="text-align: center;"></div>
@@ -153,10 +153,14 @@ function updateVclipSearchList(searchList){
     var searchBody = $('.web-search');
     var moreBody = $('.more-search');
     searchBody.empty();
+    console.log(searchList);
     $.each(searchList.documents, function(index, search) {
     	var container = $('<div>').css('display', 'flex');
         var title = $('<a>').attr('href', search.url).text(search.title).css('font-size', '20px');
-        var image = $('<img>').attr('src', search.thumbnail)
+        var image = $('<img>').attr('src', search.thumbnail).css('cursor', 'pointer');
+        image.click(function(){
+			window.open(search.url, '_blank');
+        })
         var urlLink = $('<a>').attr('href', search.url).text(search.url);
         var playtime = $('<p>').text('playtime: ' + search.play_time).css('margin', '0');;
         var datetime = $('<p>').text('작성일: ' + search.datetime).css('margin', '0');;
@@ -223,8 +227,12 @@ function updateImgSearchList(searchList){
         });
         var image = $('<img>').attr('src', search.thumbnail_url).css({
             'width': '100px',
-            'height': '100px'
+            'height': '100px',
+            'cursor': 'pointer'
         });
+        image.click(function(){
+			window.open(search.doc_url, '_blank');
+        })
         view.append(image);
         containGrid.append(view);
     });
