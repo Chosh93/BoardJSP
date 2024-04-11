@@ -30,25 +30,70 @@
 		<li role="presentation" class="vclip"><a onclick="searchVclip();">동영상</a></li>
 		<li role="presentation" class="image"><a onclick="searchImage();">이미지</a></li>
 	</ul>
-	<div class="web-search" style="padding-top: 30px;">
-	</div>
-	<div style="text-align: center;">
-		<a><h2>더보기</h2></a>
-	</div>
+	<div class="web-search" style="padding-top: 30px;"></div>
+	<div class="more-search" style="text-align: center;"></div>
 </div>
 </body>
 <script>
+var currentPage = 1;
 
 function searchWeb(){
-	var text = $(".searchInput").val();
+	if(vaildateWord()){
+		currentPage = 1;
+		sendSearchWeb();
+	}
+}
+
+function moreWebPage(){
+	currentPage++;
+	sendSearchWeb();
+}
+
+function searchVclip(){
+	if(vaildateWord()){
+		currentPage = 1;
+		sendSearchVclip();
+	}
+}
+
+function moreVclipPage(){
+	currentPage++;
+	sendSearchVclip();
+}
+
+function searchImage(){
+	if(vaildateWord()){
+		currentPage = 1;
+		sendSearchImage();
+	};
+}
+
+function moreImgPage(){
+	currentPage++;
+	sendSearchImage();
+}
+
+function vaildateWord(){
+	var word = $(".searchInput").val();
+	if(word === ""){
+		alert("검색어를 입력해 주세요.");
+		return false;
+	}
+	return true;
+}
+
+function sendSearchWeb(){
+	var page = 1;
 	$.ajax({
 		type:"GET",
-		url: "https://dapi.kakao.com/v2/search/web",
+		url: "https://dapi.kakao.com/v2/search/web?sort=accuracy",
 		headers: {Authorization: "KakaoAK c6cee192b1d1e6271a03a17adce07537"},
-		data: {query: text},
+		data: {
+			query: $(".searchInput").val(),
+			page: currentPage
+		},
 		success: function(response){
-			console.log(response.documents);
-			updateWebSearchList(response.documents);
+			updateWebSearchList(response);
 			$(".nav-tabs .web").addClass("active").siblings().removeClass("active");
 		},
 		error: function(xhr, status, error){
@@ -59,8 +104,9 @@ function searchWeb(){
 
 function updateWebSearchList(searchList){
 	var searchBody = $('.web-search');
+	var moreBody = $('.more-search');
 	searchBody.empty();
-	$.each(searchList, function(index, search) {
+	$.each(searchList.documents, function(index, search) {
         var cleanTitle = $('<div>').html(search.title).text();
         var cleanContents = $('<div>').html(search.contents).text();
         var title = $('<a>').attr('href', search.url).text(cleanTitle).css('font-size', '20px');
@@ -74,18 +120,27 @@ function updateWebSearchList(searchList){
         searchBody.append(datetime);
 		searchBody.append('<br><br>');
     });
+    if(!searchList.meta.is_end){
+        var more = $('<a>').attr('onclick', 'moreWebPage()').text('더보기').css({
+        	'font-size': '20px',
+        	'cursor': 'pointer'
+        });
+        moreBody.empty().append(more);
+    }
 }
 
-function searchVclip(){
+function sendSearchVclip(){
 	var text = $(".searchInput").val();
 	$.ajax({
 		type:"GET",
-		url: "https://dapi.kakao.com/v2/search/vclip",
+		url: "https://dapi.kakao.com/v2/search/vclip?sort=accuracy",
 		headers: {Authorization: "KakaoAK c6cee192b1d1e6271a03a17adce07537"},
-		data: {query: text},
+		data: {
+			query: $(".searchInput").val(),
+			page: currentPage
+		},
 		success: function(response){
-			console.log(response.documents);
-			updateVclipSearchList(response.documents);
+			updateVclipSearchList(response);
 			$(".nav-tabs .vclip").addClass("active").siblings().removeClass("active");
 		},
 		error: function(xhr, status, error){
@@ -96,8 +151,9 @@ function searchVclip(){
 
 function updateVclipSearchList(searchList){
     var searchBody = $('.web-search');
+    var moreBody = $('.more-search');
     searchBody.empty();
-    $.each(searchList, function(index, search) {
+    $.each(searchList.documents, function(index, search) {
     	var container = $('<div>').css('display', 'flex');
         var title = $('<a>').attr('href', search.url).text(search.title).css('font-size', '20px');
         var image = $('<img>').attr('src', search.thumbnail)
@@ -119,18 +175,27 @@ function updateVclipSearchList(searchList){
         searchBody.append(container);
         searchBody.append('<br><br>');
     });
+    if(!searchList.meta.is_end){
+        var more = $('<a>').attr('onclick', 'moreVclipPage()').text('더보기').css({
+        	'font-size': '20px',
+        	'cursor': 'pointer'
+        });
+        moreBody.empty().append(more);
+    }
 }
 
-function searchImage(){
+function sendSearchImage(){
 	var text = $(".searchInput").val();
 	$.ajax({
 		type:"GET",
-		url: "https://dapi.kakao.com/v2/search/image",
+		url: "https://dapi.kakao.com/v2/search/image?sort=accuracy",
 		headers: {Authorization: "KakaoAK c6cee192b1d1e6271a03a17adce07537"},
-		data: {query: text},
+		data: {
+			query: $(".searchInput").val(),
+			page: currentPage
+		},
 		success: function(response){
-			console.log(response.documents);
-			updateImgSearchList(response.documents);
+			updateImgSearchList(response);
 			$(".nav-tabs .image").addClass("active").siblings().removeClass("active");
 		},
 		error: function(xhr, status, error){
@@ -149,8 +214,9 @@ function updateImgSearchList(searchList){
 	    'grid-template-columns': 'repeat(auto-fit, 150px)',
 	    'gap': '1rem'
     });
+    var moreBody = $('.more-search');
     searchBody.empty();
-    $.each(searchList, function(index, search) {
+    $.each(searchList.documents, function(index, search) {
         var view = $('<div>').css({
         	'display': 'flex',
         	'flex-direction': 'column'
@@ -163,6 +229,13 @@ function updateImgSearchList(searchList){
         containGrid.append(view);
     });
     searchBody.append(containGrid);
+    if(!searchList.meta.is_end){
+        var more = $('<a>').attr('onclick', 'moreImgPage()').text('더보기').css({
+        	'font-size': '20px',
+        	'cursor': 'pointer'
+        });
+        moreBody.empty().append(more);
+    }
 }
 
 function handleKeyPress(event) {
