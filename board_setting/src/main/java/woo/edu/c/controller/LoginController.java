@@ -41,4 +41,11 @@ public class LoginController {
 		logger.info("ajax login 진행");
 		return loginService.login(memberId, memberPw);
 	}
+	
+	@RequestMapping(value = "/ajax/idCheck", method = RequestMethod.POST)
+	@ResponseBody
+	public int ajaxJoin(String memberId) throws Exception {
+		logger.info("ajax idCheck 진행");
+		return loginService.idCheck(memberId);
+	}
 }

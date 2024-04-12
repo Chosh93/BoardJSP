@@ -29,4 +29,13 @@ public class LoginDaoImpl implements LoginDao {
 		params.put("memberPw", memberPw);
 		return !sql.selectList(namespace + ".login", params).isEmpty();
 	}
+	
+	// 아이디 찾기
+	@Override
+	public int idCheck(String memberId) {
+		System.out.println("dao : " + memberId);
+		int count = sql.selectOne(namespace + ".idCheck", memberId);
+		System.out.println(count);
+		return count;
+	}
 }

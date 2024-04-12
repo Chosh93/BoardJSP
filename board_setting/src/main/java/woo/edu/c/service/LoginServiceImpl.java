@@ -20,4 +20,9 @@ public class LoginServiceImpl implements LoginService{
 	public boolean login(String memberId, String memberPw) throws Exception {
 		return loginDao.login(memberId, memberPw);
 	}
+	
+	@Override
+	public int idCheck(String memberId) throws Exception {
+		return loginDao.idCheck(memberId);
+	}
 }

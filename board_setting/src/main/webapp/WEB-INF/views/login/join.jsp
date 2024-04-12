@@ -19,7 +19,7 @@
      .signup-form {
             width: 500px;
             height: 500px;
-            padding: 20px;
+            padding: 30px;
      }
      input	{
      	margin-top: 30px;
@@ -30,8 +30,11 @@
      	height: 50px;
      	text-align: center;
      }
-     button {
+     .join-btn {
      	margin-top: 50px;
+     	margin-left: 80px;
+     }
+     .id-check{
      	margin-left: 80px;
      }
 </style>
@@ -44,6 +47,7 @@
 	    
 	    <label for="id">ID</label>
 	    <input class="input-id" type="text" id="id" name="id" placeholder="ID" required><br>
+	    <button class="id-check" onclick="idCheck();">아이디체크</button><br>
 	    
 	    <label for="password">Password</label>
 	    <input class="input-pw" type="password" id="password" name="password" placeholder="비밀번호" required><br>
@@ -51,16 +55,72 @@
 	    <label for="confirmPassword">Password Check</label>
 	    <input class="input-pwch" type="password" id="confirmPassword" name="confirmPassword" placeholder="비밀번호 확인" required><br>
 	    
-	    <button type="submit">회원가입</button>
+	    <button class="join-btn" onclick="validateAll();">회원가입</button>
     </div>
 </div>
 </body>
 <script>
 function vaildateName(){
 	var inputName = $(".input-name").val();
-	if(inputId === ""){
-		
+	if(inputName === ""){
+		return false;
 	}
+	return true;
 }
+
+function vaildateId(){
+	var inputId = $(".input-id").val();
+	if(inputId === ""){
+		return false;
+	}
+	return true;
+}
+
+function vaildatePw(){
+	var inputPw = $(".input-pw").val();
+	if(inputPw === ""){
+		return false;
+	}
+	return true;
+}
+
+function validateAll(){
+    var missingFields = "";
+    if(!vaildateName()){
+        missingFields += "이름, ";
+    }
+    if(!vaildateId()){
+        missingFields += "ID, ";
+    }
+    if(!vaildatePw()){
+        missingFields += "비밀번호, ";
+    }
+    if(missingFields !== ""){
+        missingFields = missingFields.slice(0, -2); // 마지막 쉼표와 공백 제거
+        alert(missingFields + "을(를) 확인해주세요."); // 누락된 입력값을 알림에 출력
+        return false;
+    }
+    return true;
+}
+
+function idCheck() {
+	$.ajax({
+		type: 'POST',
+		url: '/ajax/idCheck',
+		data: { memberId: $(".input-id").val() },
+		success: function(response) {
+			console.log(response)
+			if(response > 0){
+				alert("이미 사용중인 아이디 입니다.");
+			} else {
+				alert("사용 가능한 아이디 입니다.");
+			}
+		},
+		error: function(xhr, status, error){
+			console.log("검사 실패", error)
+		}
+	});
+}
+
 </script>
 </html>
