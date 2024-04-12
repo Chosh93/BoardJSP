@@ -51,7 +51,6 @@ public class BoardController {
    // 게시판 작성 페이지 이동
    @RequestMapping(value = "/board/write", method = RequestMethod.GET)
    public void movewriteBoard() {
-      logger.info("/board/write");
       logger.info("작성페이지로 이동");
    }
    

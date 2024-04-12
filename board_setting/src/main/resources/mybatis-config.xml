@@ -9,5 +9,6 @@
 <!-- 		<typeAlias type="woo.edu.c.vo.testVo" alias="testVo"/> -->
 		<typeAlias type="woo.edu.c.vo.BoardVo" alias="BoardVo"/>
 		<typeAlias type="woo.edu.c.vo.CalendarVo" alias="CalendarVo"/>
+		<typeAlias type="woo.edu.c.vo.LoginVo" alias="loginVo"/>
 	</typeAliases>
 </configuration>

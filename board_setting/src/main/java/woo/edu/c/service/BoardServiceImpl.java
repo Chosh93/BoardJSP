@@ -13,7 +13,6 @@ import woo.edu.c.controller.HomeController;
 import woo.edu.c.dao.BoardDao;
 import woo.edu.c.vo.BoardVo;
 
-
 @Service
 public class BoardServiceImpl implements BoardService{
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
