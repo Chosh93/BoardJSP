@@ -76,6 +76,13 @@ function vaildateId(){
 	return true;
 }
 
+function vaildateIdCheck(idCheck){
+	if(idCheck > 0) {
+		return false;
+	}
+	return true;
+}
+
 function vaildatePw(){
 	var inputPw = $(".input-pw").val();
 	if(inputPw === ""){
