@@ -54,12 +54,19 @@
 	    
 	    <label for="confirmPassword">Password Check</label>
 	    <input class="input-pwch" type="password" id="confirmPassword" name="confirmPassword" placeholder="비밀번호 확인" required><br>
+	    <p class="pwch-result"></p>
 	    
-	    <button class="join-btn" onclick="validateAll();">회원가입</button>
+	    <button class="join-btn" onclick="memberJoin();">회원가입</button>
     </div>
 </div>
 </body>
 <script>
+$(document).ready(function(){
+	$(".input-pwch").on("input", function(){
+		pwCheck();
+	})
+})
+
 function vaildateName(){
 	var inputName = $(".input-name").val();
 	if(inputName === ""){
@@ -91,6 +98,22 @@ function vaildatePw(){
 	return true;
 }
 
+function pwCheck() {
+	var inputPw = $(".input-pw").val();
+	var inputPwCheck = $(".input-pwch").val();
+	if(!inputPw){
+		$(".pwch-result").text("")
+		return;
+	}
+	if(inputPw === inputPwCheck){
+		$(".pwch-result").text("비밀번호가 일치합니다.").css("color", "red");
+		return true;
+	} else {
+		$(".pwch-result").text("비밀번호가 일치하지 않습니다.").css("color", "red");
+		return false;
+	}
+}
+
 function validateAll(){
     var missingFields = "";
     if(!vaildateName()){
@@ -116,7 +139,7 @@ function idCheck() {
 		url: '/ajax/idCheck',
 		data: { memberId: $(".input-id").val() },
 		success: function(response) {
-			console.log(response)
+			idCheckResponse = response;
 			if(response > 0){
 				alert("이미 사용중인 아이디 입니다.");
 			} else {
@@ -127,6 +150,30 @@ function idCheck() {
 			console.log("검사 실패", error)
 		}
 	});
+}
+
+var idCheckResponse;
+function memberJoin(){
+	if(validateAll()){
+		if(vaildateName() && vaildateId() && vaildatePw() && pwCheck() && idCheckResponse === 0) {
+	        $.ajax({
+				type: 'POST',
+				url: '/ajax/join',
+				data: {
+					memberId: $(".input-id").val(),
+					memberPw: $(".input-pw").val(),
+					memberName: $(".input-name").val()
+				},
+				success: function(response){
+					alert("회원가입 완료");
+					window.location.href = '/';
+				},
+				error: function(xhr, status, error){
+					console.log(error);
+				}
+	        });
+	    }
+	}
 }
 
 </script>

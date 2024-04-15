@@ -44,8 +44,15 @@ public class LoginController {
 	
 	@RequestMapping(value = "/ajax/idCheck", method = RequestMethod.POST)
 	@ResponseBody
-	public int ajaxJoin(String memberId) throws Exception {
+	public int ajaxIdCheck(String memberId) throws Exception {
 		logger.info("ajax idCheck 진행");
 		return loginService.idCheck(memberId);
+	}
+	
+	@RequestMapping(value = "/ajax/join", method = RequestMethod.POST)
+	@ResponseBody
+	public void ajaxJoin(String memberId, String memberPw, String memberName) throws Exception {
+		logger.info("ajax/join 진행 ");
+		System.out.println(memberId + " " + memberPw + " " + memberName);
 	}
 }
