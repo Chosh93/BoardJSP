@@ -84,7 +84,10 @@
 				TEST.BOARD
 			WHERE
 				IS_DEL = 'N'
-			AND
-				BTITLE LIKE '%#{seachData}%'
+	        AND (
+	            BTITLE LIKE '%' || #{searchData} || '%'
+	            OR BWRITER LIKE '%' || #{searchData} || '%'
+	            OR BCONTENTS LIKE '%' || #{searchData} || '%'
+	        )
 		</select>
 	</mapper>

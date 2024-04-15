@@ -7,17 +7,29 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+   select{
+       margin-left: 75%;
+   }
+</style>
 </head>
 <body>
 <div style="padding: 0 110px;">
-    <h1>게시판</h1>
+<h1>게시판</h1>
+    <span class="list-cnt"></span>
+    <select onchange="changePageSize(this.value)">
+		<option value="5">5줄 보기</option>
+		<option value="10">10줄 보기</option>
+		<option value="15">15줄 보기</option>
+		<option value="20">20줄 보기</option>
+    </select>
+    <input class="input-search" type="text">
+    <button onclick="search();">검색</button>
     <table id="boardTable" class="table table-striped">
     	<thead>
 	    	<tr>
-	    		<th><input id='allCheck' type='checkbox' name='allCheck' onclick='selectAll(this);'/>전체선택</th>
-				<th>번호</th><th>제목</th><th>작성자</th><th>날짜</th>
+				<th>번호</th><th style="width:60%;">제목</th><th>작성자</th><th>날짜</th>
 			</tr>
-			<td><button onclick="selectDel()"type="button" class="btn btn-danger" style="background-image : var (-bs-gradient);">선택삭제</button></td>
 		</thead>
 		<tbody id="boardBody">
 		</tbody>
@@ -55,20 +67,6 @@ function listCnt() {
 	})
 }
 
-function updateBoardList(boardList) {
-    var tableBody = $('#boardBody');
-    tableBody.empty();
-    $.each(boardList, function(index, board) {
-    	var row = $('<tr>');
-        row.append('<td><input type="checkbox" name="RowCheck" value="' + board.bnum + '" onclick="checkSelectAll();"></td>');
-        row.append('<td>' + board.bnum + '</td>');
-        row.append('<td><a class="board-title" data-bnum="' + board.bnum + '">' + board.btitle + '</a></td>');
-        row.append('<td>' + board.bwriter + '</td>');
-        row.append('<td>' + board.bdate + '</td>');
-        tableBody.append(row);
-    });
-}
-
 function loadBoardList() {
     $.ajax({
         type: 'GET',
@@ -84,18 +82,49 @@ function loadBoardList() {
     });
 }
 
+function updateBoardList(boardList) {
+    var tableBody = $('#boardBody');
+    tableBody.empty();
+    $.each(boardList, function(index, board) {
+    	var row = $('<tr>');
+        row.append('<td>' + board.bnum + '</td>');
+        row.append('<td><a class="board-title" data-bnum="' + board.bnum + '">' + board.btitle + '</a></td>');
+        row.append('<td>' + board.bwriter + '</td>');
+        row.append('<td>' + formatDate(board.bdate) + '</td>');
+        tableBody.append(row);
+    });
+}
+
+//날짜 포맷
+function formatDate(dateString) {
+    var date = new Date(dateString);
+    var year = date.getFullYear();
+    var month = ("0" + (date.getMonth() + 1)).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+    var hours = ("0" + date.getHours()).slice(-2);
+    var minutes = ("0" + date.getMinutes()).slice(-2);
+    var seconds = ("0" + date.getSeconds()).slice(-2);
+    return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+}
+
 function search() {
-	$.ajax({
-		type: 'POST',
-		url: 'ajax/search',
-		data: {searchData: $(".input-search").val()},
-		success: function(response){
-			console.log(response);
-		},
-		error: function(xhr, status, error){
-			console.log(error);
-		}
-	})
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/search',
+        data: { searchData: $(".input-search").val() },
+        success: function(response) {
+            console.log(response);
+            updateBoardList(response);
+        },
+        error: function(xhr, status, error) {
+            console.log(error);
+        }
+    })
+}
+
+function changePageSize(pageSize) {
+    console.log("페이지 사이즈 변경:", pageSize);
+    loadBoardList();
 }
 </script>
 </html>

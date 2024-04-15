@@ -199,7 +199,7 @@ public class BoardController {
    
    @RequestMapping(value = "/ajax/search", method = RequestMethod.POST)
    @ResponseBody
-   public List<BoardVo> searchList(String searchData) throws Exception {
+   public List<BoardVo> searchList(@RequestParam("searchData") String searchData) throws Exception {
 	   logger.info("/ajax/search 진입");
 	   System.out.println(searchData);
 	   List<BoardVo> list = boardService.search(searchData);
