@@ -30,21 +30,21 @@ a.board-title{
 // 게시판 ajax 목록 출력
 $(document).ready(function() {
    loadBoardList();
-    function loadBoardList() {
-        $.ajax({
-            type: 'GET',
-            url: '/ajax/list',
-            dataType: 'json',
-            success: function(response) {
-                updateBoardList(response);
-            },
-            error: function(xhr, status, error) {
-                console.error('게시판 목록 불러오기 실패:', error);
-                alert('게시판 목록을 불러오는데 실패했습니다.');
-            }
-        });
-    }
 });
+function loadBoardList() {
+    $.ajax({
+        type: 'GET',
+        url: '/ajax/list',
+        dataType: 'json',
+        success: function(response) {
+            updateBoardList(response);
+        },
+        error: function(xhr, status, error) {
+            console.error('게시판 목록 불러오기 실패:', error);
+            alert('게시판 목록을 불러오는데 실패했습니다.');
+        }
+    });
+}
 
 function updateBoardList(boardList) {
     var tableBody = $('#boardBody');

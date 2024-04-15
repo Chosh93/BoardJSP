@@ -50,4 +50,14 @@ public class BoardDaoImpl implements BoardDao {
 	public void update(BoardVo vo) {
 		sql.update(namespace + ".update", vo);
 	}
+	
+	@Override
+	public int listCnt() {
+		return sql.selectOne(namespace + ".listCnt");
+	}
+	
+	@Override
+	public List<BoardVo> search(String searchData){
+		return sql.selectList(namespace + ".search", searchData); 
+	}
 }

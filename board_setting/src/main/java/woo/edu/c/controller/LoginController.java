@@ -51,8 +51,9 @@ public class LoginController {
 	
 	@RequestMapping(value = "/ajax/join", method = RequestMethod.POST)
 	@ResponseBody
-	public void ajaxJoin(String memberId, String memberPw, String memberName) throws Exception {
+	public void ajaxJoin(LoginVo vo) throws Exception {
 		logger.info("ajax/join 진행 ");
-		System.out.println(memberId + " " + memberPw + " " + memberName);
+		System.out.println(vo);
+		loginService.join(vo);
 	}
 }

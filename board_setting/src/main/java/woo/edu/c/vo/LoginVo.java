@@ -2,35 +2,34 @@ package woo.edu.c.vo;
 
 public class LoginVo {
 	
-	private int memberno;
-	private String memberid;
-	private String memberpw;
-	private String memberisDel;
+	private int memberNo;
+	private String memberId;
+	private String memberPw;
+	private String memberIsDel;
 	private String memberName;
-	
 	public int getMemberno() {
-		return memberno;
+		return memberNo;
 	}
 	public void setMemberno(int memberno) {
-		this.memberno = memberno;
+		this.memberNo = memberNo;
 	}
-	public String getMemberid() {
-		return memberid;
+	public String getMemberId() {
+		return memberId;
 	}
-	public void setMemberid(String memberid) {
-		this.memberid = memberid;
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
 	}
-	public String getMemberpw() {
-		return memberpw;
+	public String getMemberPw() {
+		return memberPw;
 	}
-	public void setMemberpw(String memberpw) {
-		this.memberpw = memberpw;
+	public void setMemberPw(String memberPw) {
+		this.memberPw = memberPw;
 	}
-	public String getMemberisDel() {
-		return memberisDel;
+	public String getMemberIsDel() {
+		return memberIsDel;
 	}
-	public void setMemberisDel(String memberisDel) {
-		this.memberisDel = memberisDel;
+	public void setMemberIsDel(String memberIsDel) {
+		this.memberIsDel = memberIsDel;
 	}
 	public String getMemberName() {
 		return memberName;
@@ -40,7 +39,7 @@ public class LoginVo {
 	}
 	@Override
 	public String toString() {
-		return "LoginVo [memberno=" + memberno + ", memberid=" + memberid + ", memberpw=" + memberpw + ", memberisDel="
-				+ memberisDel + ", memberName=" + memberName + "]";
+		return "LoginVo [memberNo=" + memberNo + ", memberId=" + memberId + ", memberPw=" + memberPw + ", memberIsDel="
+				+ memberIsDel + ", memberName=" + memberName + "]";
 	}
 }

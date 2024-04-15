@@ -57,4 +57,15 @@ public class BoardServiceImpl implements BoardService{
 		boardDao.update(vo);
 	}
 	
+	// 총 게시글 수
+	@Override
+	public int listCnt() throws Exception {
+		return boardDao.listCnt();
+	}
+	
+	// 게시글 검색
+	public List<BoardVo> search(String searchData) throws Exception {
+		return boardDao.search(searchData);
+	}
+	
 }

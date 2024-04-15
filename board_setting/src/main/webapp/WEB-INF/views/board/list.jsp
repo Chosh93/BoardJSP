@@ -32,4 +32,6 @@
 	<button onclick="location.href='/board/write' " type="button" class="btn btn-success" style="background-image : var (-bs-gradient);">글쓰기</button>
 </div>
 </body>
+<script>
+</script>
 </html>

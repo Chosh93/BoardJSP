@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import woo.edu.c.controller.HomeController;
+import woo.edu.c.vo.LoginVo;
 
 @Repository
 public class LoginDaoImpl implements LoginDao {
@@ -33,9 +34,15 @@ public class LoginDaoImpl implements LoginDao {
 	// 아이디 찾기
 	@Override
 	public int idCheck(String memberId) {
-		System.out.println("dao : " + memberId);
 		int count = sql.selectOne(namespace + ".idCheck", memberId);
 		System.out.println(count);
 		return count;
+	}
+	
+	// 회원가입
+	@Override
+	public void join(LoginVo vo) {
+		System.out.println("daoImpl: " + vo);
+		sql.insert(namespace + ".join", vo);
 	}
 }

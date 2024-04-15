@@ -28,4 +28,15 @@
 			WHERE
 				MEMBERID = #{memberId}
 		</select>
+		
+		<!-- 회원가입 -->
+		<insert id="join" parameterType="loginVo">
+			INSERT INTO TEST.MEMBER (MEMBERNO, MEMBERID, MEMBERPW, MEMBERNAME)
+			VALUES (
+				TEST.member_seq.NEXTVAL,
+				#{memberId},
+				#{memberPw},
+				#{memberName}
+			)
+		</insert>
 	</mapper>

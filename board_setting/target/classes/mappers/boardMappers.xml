@@ -19,6 +19,16 @@
 				BNUM DESC
 		</select>
 		
+		<!-- 게시글 카운트  -->
+  		<select id="listCnt" resultType="int">
+			SELECT 
+				COUNT(*)
+			FROM 
+				TEST.BOARD
+			WHERE
+				IS_DEL = 'N'
+		</select>
+		
 		<!-- 게시판 작성  -->
 		<insert id="write" parameterType="boardVo">
 			INSERT INTO TEST.BOARD (BNUM, BTITLE, BWRITER, BCONTENTS, BDATE)
@@ -62,4 +72,19 @@
 			WHERE
 			    BNUM = #{bnum}
 		</update>
+		
+		<!-- 게시글 검색 -->
+		<select id="search" resultType="boardVo">
+			SELECT 
+				BNUM,
+				BTITLE,
+				BWRITER,
+				TO_CHAR(BDATE, 'yyyy-MM-dd HH24:mi:ss') AS BDATE
+			FROM 
+				TEST.BOARD
+			WHERE
+				IS_DEL = 'N'
+			AND
+				BTITLE LIKE '%#{seachData}%'
+		</select>
 	</mapper>

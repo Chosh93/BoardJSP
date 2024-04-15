@@ -184,7 +184,27 @@ public class BoardController {
 	   logger.info("/calc 페이지 이동");
    }
    
-
+   // 게시판  검색 페이지
+   @RequestMapping(value = "/board/search", method = RequestMethod.GET)
+   public void moveBoardSearch() throws Exception {
+	   logger.info("/board/search 페이지 이동");
+   }
+   
+   @RequestMapping(value = "/ajax/listCnt", method = RequestMethod.GET)
+   @ResponseBody
+   public int listCnt() throws Exception {
+	   logger.info("/ajax/listCnt 진입");
+	   return boardService.listCnt();
+   }
+   
+   @RequestMapping(value = "/ajax/search", method = RequestMethod.POST)
+   @ResponseBody
+   public List<BoardVo> searchList(String searchData) throws Exception {
+	   logger.info("/ajax/search 진입");
+	   System.out.println(searchData);
+	   List<BoardVo> list = boardService.search(searchData);
+	   return list;
+   }
 }
 
 

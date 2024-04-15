@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import woo.edu.c.controller.HomeController;
 import woo.edu.c.dao.LoginDao;
+import woo.edu.c.vo.LoginVo;
 
 @Service
 public class LoginServiceImpl implements LoginService{
@@ -24,5 +25,10 @@ public class LoginServiceImpl implements LoginService{
 	@Override
 	public int idCheck(String memberId) throws Exception {
 		return loginDao.idCheck(memberId);
+	}
+	
+	@Override
+	public void join(LoginVo vo) throws Exception {
+		loginDao.join(vo);
 	}
 }

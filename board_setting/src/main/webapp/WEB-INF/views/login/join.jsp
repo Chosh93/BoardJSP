@@ -172,7 +172,9 @@ function memberJoin(){
 					console.log(error);
 				}
 	        });
-	    }
+	    } else {
+			alert("아이디 체크 하세요.");
+		}
 	}
 }
 

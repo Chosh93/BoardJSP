@@ -7,6 +7,7 @@
 		<ul class="dropdown-menu" role="menu">
 			<li><a href="/board">게시판 목록</a></li>
 			<li><a href="/board/ajaxList">게시판 목록 Ajax</a></li>
+			<li><a href="/board/search">게시판 검색</a></li>
 		</ul>
 	</li>
 	<li role="presentation" class="dropdown test">
