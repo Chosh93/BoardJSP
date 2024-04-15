@@ -68,4 +68,8 @@ public class BoardServiceImpl implements BoardService{
 		return boardDao.search(searchData);
 	}
 	
+	// 게시물 페이징
+	public List<BoardVo> listPage(int displayPost, int postNum) throws Exception {
+		return boardDao.listPage(displayPost, postNum);
+	}
 }

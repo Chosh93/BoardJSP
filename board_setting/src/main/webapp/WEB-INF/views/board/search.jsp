@@ -17,7 +17,8 @@
 <div style="padding: 0 110px;">
 <h1>게시판</h1>
     <span class="list-cnt"></span>
-    <select onchange="changePageSize(this.value)">
+    <select class="page-select" onchange="changePageSize(this.value)">
+    	<option value="0">선택</option>
 		<option value="5">5줄 보기</option>
 		<option value="10">10줄 보기</option>
 		<option value="15">15줄 보기</option>
@@ -124,7 +125,19 @@ function search() {
 
 function changePageSize(pageSize) {
     console.log("페이지 사이즈 변경:", pageSize);
-    loadBoardList();
+    var selectVal = $(".page-select").val();
+    console.log(selectVal);
+    $.ajax({
+		type: 'GET',
+		url: '/board/page',
+		data: {pageSize: $(".page-select").val()},
+		success: function(response) {
+			console.log(response);
+		},
+		error: function(xhr, status, error) {
+			console.log(error);
+		}
+    });
 }
 </script>
 </html>

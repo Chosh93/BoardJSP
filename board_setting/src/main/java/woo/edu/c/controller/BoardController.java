@@ -205,6 +205,14 @@ public class BoardController {
 	   List<BoardVo> list = boardService.search(searchData);
 	   return list;
    }
+   
+   // 게시판 페이징
+   @RequestMapping(value = "/board/page", method = RequestMethod.GET)
+   public void getListPage(Model model) throws Exception {
+	   List list = null; 
+	   list = service.list();
+	   model.addAttribute("list", list);   
+	  }
 }
 
 

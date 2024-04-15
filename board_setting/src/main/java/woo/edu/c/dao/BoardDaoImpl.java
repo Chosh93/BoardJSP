@@ -1,5 +1,6 @@
 package woo.edu.c.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -59,5 +60,13 @@ public class BoardDaoImpl implements BoardDao {
 	@Override
 	public List<BoardVo> search(String searchData){
 		return sql.selectList(namespace + ".search", searchData); 
+	}
+	
+	@Override
+	public List<BoardVo> listPage(int displayPost, int postNum) throws Exception {
+		HashMap data = new HashMap();
+		data.put("displayPost", displayPost);
+		data.put("postNum", postNum);
+		return sql.selectList(namespace + ".listPage", data);
 	}
 }
