@@ -27,6 +27,11 @@
 				TEST.BOARD
 			WHERE
 				IS_DEL = 'N'
+			AND (
+		        BTITLE LIKE '%' || #{searchData} || '%'
+		        OR BWRITER LIKE '%' || #{searchData} || '%'
+		        OR BCONTENTS LIKE '%' || #{searchData} || '%'
+		    )
 		</select>
 		
 		<!-- 게시판 작성  -->
@@ -73,31 +78,42 @@
 			    BNUM = #{bnum}
 		</update>
 		
-		<!-- 게시글 검색 -->
+		<!-- 게시글 검색 + 가져오기 -->
 		<select id="search" resultType="boardVo">
-			SELECT 
-				BNUM,
-				BTITLE,
-				BWRITER,
-				TO_CHAR(BDATE, 'yyyy-MM-dd HH24:mi:ss') AS BDATE
-			FROM 
-				TEST.BOARD
-			WHERE
-				IS_DEL = 'N'
-	        AND (
-	            BTITLE LIKE '%' || #{searchData} || '%'
-	            OR BWRITER LIKE '%' || #{searchData} || '%'
-	            OR BCONTENTS LIKE '%' || #{searchData} || '%'
-	        )
+		    SELECT 
+		        BNUM,
+		        BTITLE,
+		        BWRITER,
+		        TO_CHAR(BDATE, 'yyyy-MM-dd HH24:mi:ss') AS BDATE
+		    FROM 
+		        TEST.BOARD
+		    WHERE
+		        IS_DEL = 'N'
+		    AND (
+		        BTITLE LIKE '%' || #{searchData} || '%'
+		        OR BWRITER LIKE '%' || #{searchData} || '%'
+		        OR BCONTENTS LIKE '%' || #{searchData} || '%'
+		    )
+		    ORDER BY BDATE DESC
 		</select>
-		
+
 		<!-- 게시물 목록 + 페이징 -->
-		<select id="listPage" parameterType="hashMap" resultType="boardVO">
-			SELECT
-		 		BNUM, BTITLE, BWRITER, BDATE
-		 	FROM
-		 		TEST.BOARD
-		 	ORDER BY BNUM DESC
-		 	LIMIT #{displayPost}, #{postNum}
+		<select id="listPage" parameterType="hashMap" resultType="boardVo">
+			SELECT 
+				*
+			FROM 
+				(
+					SELECT 
+						ROWNUM AS ROW_NUM,
+						TEST.BOARD.*
+					 FROM 
+					 	TEST.BOARD 
+					 WHERE 
+					 	IS_DEL = 'N'
+				)
+			WHERE 
+				ROW_NUM >= #{startNum} 
+			AND
+				ROW_NUM = #{endNum}
 		</select>
 	</mapper>

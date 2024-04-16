@@ -53,8 +53,8 @@ public class BoardDaoImpl implements BoardDao {
 	}
 	
 	@Override
-	public int listCnt() {
-		return sql.selectOne(namespace + ".listCnt");
+	public int listCnt(String searchData) {
+		return sql.selectOne(namespace + ".listCnt", searchData);
 	}
 	
 	@Override
@@ -63,10 +63,12 @@ public class BoardDaoImpl implements BoardDao {
 	}
 	
 	@Override
-	public List<BoardVo> listPage(int displayPost, int postNum) throws Exception {
+	public List<BoardVo> listPage(int page) throws Exception {
 		HashMap data = new HashMap();
-		data.put("displayPost", displayPost);
-		data.put("postNum", postNum);
+		int startNum = (page-1)*10+1;
+		int endNum = page*10;
+		data.put("startNum", startNum);
+		data.put("endNum", endNum);
 		return sql.selectList(namespace + ".listPage", data);
 	}
 }

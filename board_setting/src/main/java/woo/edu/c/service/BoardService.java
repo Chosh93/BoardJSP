@@ -22,11 +22,11 @@ public interface BoardService {
 	void update(BoardVo vo) throws Exception;
 	
 	// 게시물 카운트
-	int listCnt() throws Exception;
+	int listCnt(String searchData) throws Exception;
 	
 	// 게시글 검색
 	List<BoardVo> search(String searchData) throws Exception;
 	
 	// 게시물 페이징
-	List<BoardVo> listPage(int displayPost, int postNum) throws Exception;
+	List<BoardVo> listPage(int page) throws Exception;
 }

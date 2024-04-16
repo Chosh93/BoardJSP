@@ -59,8 +59,8 @@ public class BoardServiceImpl implements BoardService{
 	
 	// 총 게시글 수
 	@Override
-	public int listCnt() throws Exception {
-		return boardDao.listCnt();
+	public int listCnt(String searchData) throws Exception {
+		return boardDao.listCnt(searchData);
 	}
 	
 	// 게시글 검색
@@ -69,7 +69,7 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	// 게시물 페이징
-	public List<BoardVo> listPage(int displayPost, int postNum) throws Exception {
-		return boardDao.listPage(displayPost, postNum);
+	public List<BoardVo> listPage(int page) throws Exception {
+		return boardDao.listPage(page);
 	}
 }

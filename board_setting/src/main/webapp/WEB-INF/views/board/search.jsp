@@ -17,15 +17,15 @@
 <div style="padding: 0 110px;">
 <h1>게시판</h1>
     <span class="list-cnt"></span>
-    <select class="page-select" onchange="changePageSize(this.value)">
-    	<option value="0">선택</option>
+    <select class="page-select" onchange="loadBoardList();">
+    	<option value="10">선택</option>
 		<option value="5">5줄 보기</option>
 		<option value="10">10줄 보기</option>
 		<option value="15">15줄 보기</option>
 		<option value="20">20줄 보기</option>
     </select>
     <input class="input-search" type="text">
-    <button onclick="search();">검색</button>
+    <button onclick="loadBoardList();">검색</button>
     <table id="boardTable" class="table table-striped">
     	<thead>
 	    	<tr>
@@ -45,7 +45,7 @@
        <textarea rows="10" type="text" id="wcontents" name="bcontents" placeholder="내용을 입력하세요." style="width: 100%; margin-bottom: 15px;"></textarea><br>
        <button type="button" onclick="writeBoard()" class="btn btn-info">작성</button>
    </form>
-      	<div id="boardDetail"></div>
+   <div class="show-paging"></div>
 </div>
 </body>
 <script>
@@ -55,13 +55,15 @@ $(document).ready(function(){
 
 function loadBoardList() {
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         url: '/board/search/list',
-        data: {inputData: $(".input-search").val()},
-        dataType: 'json',
+        data: { searchData: $(".input-search").val(),
+            	displayRow: $(".page-select").val()
+        },
         success: function(response) {
-            updateBoardList(response);
+            console.log(response);
             $(".list-cnt").text("총 "+response.length+"개");
+            updateBoardList(response);
         },
         error: function(xhr, status, error) {
             console.error('게시판 목록 불러오기 실패:', error);
@@ -95,37 +97,5 @@ function formatDate(dateString) {
     return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
 }
 
-function search() {
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/search',
-        data: { searchData: $(".input-search").val() },
-        success: function(response) {
-            console.log(response);
-            updateBoardList(response);
-            $(".list-cnt").text("총 "+response.length+"개");
-        },
-        error: function(xhr, status, error) {
-            console.log(error);
-        }
-    })
-}
-
-function changePageSize(pageSize) {
-    console.log("페이지 사이즈 변경:", pageSize);
-    var selectVal = $(".page-select").val();
-    console.log(selectVal);
-    $.ajax({
-		type: 'GET',
-		url: '/board/page',
-		data: {pageSize: $(".page-select").val()},
-		success: function(response) {
-			console.log(response);
-		},
-		error: function(xhr, status, error) {
-			console.log(error);
-		}
-    });
-}
 </script>
 </html>

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import woo.edu.c.service.BoardService;
 import woo.edu.c.vo.BoardVo;
+import woo.edu.c.vo.PageVo;
 
 @Controller
 public class BoardController {
@@ -191,32 +192,22 @@ public class BoardController {
    }
    
    // 게시판 검색페이지 게시글 불러오기
-   @RequestMapping(value = "/board/search/list", method = RequestMethod.POST)
+   @RequestMapping(value = "/board/search/list", method = RequestMethod.GET)
    @ResponseBody
-   public List<BoardVo> getSearchBoard(@RequestParam("inputData") String inputData) throws Exception {
-	   List<BoardVo> list = boardService.search(inputData);
-	   return list;
-   }
-   
-   // 게시글 검색기능
-   @RequestMapping(value = "/ajax/search", method = RequestMethod.POST)
-   @ResponseBody
-   public List<BoardVo> searchList(@RequestParam("searchData") String searchData) throws Exception {
-	   logger.info("/ajax/search 진입");
-	   System.out.println(searchData);
+   public List getSearchBoard(@RequestParam("searchData") String searchData, @RequestParam("displayRow") int displayRow) throws Exception {
+	   System.out.println("searchData: " + searchData);
+	   PageVo paging = new PageVo();
+	   
+	   int page = 1;
+	   int totalCnt = boardService.listCnt(searchData);
+	   
+	   paging.setPage(page);
+	   paging.setTotalCnt(totalCnt);
+	   paging.setDisplayRow(displayRow);
+	   System.out.println(paging);
 	   List<BoardVo> list = boardService.search(searchData);
 	   return list;
    }
-   
-//   // 게시판 페이징
-//   @RequestMapping(value = "/board/page", method = RequestMethod.GET)
-//   public void getListPage(Model model) throws Exception {
-//	   int count = boardService.listCnt();
-//	   
-//	   List list = null; 
-//	   list = service.list();
-//	   model.addAttribute("list", list);   
-//	  }
 }
 
 
