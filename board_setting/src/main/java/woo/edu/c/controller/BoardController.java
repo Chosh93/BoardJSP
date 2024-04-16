@@ -190,13 +190,15 @@ public class BoardController {
 	   logger.info("/board/search 페이지 이동");
    }
    
-   @RequestMapping(value = "/ajax/listCnt", method = RequestMethod.GET)
+   // 게시판 검색페이지 게시글 불러오기
+   @RequestMapping(value = "/board/search/list", method = RequestMethod.POST)
    @ResponseBody
-   public int listCnt() throws Exception {
-	   logger.info("/ajax/listCnt 진입");
-	   return boardService.listCnt();
+   public List<BoardVo> getSearchBoard(@RequestParam("inputData") String inputData) throws Exception {
+	   List<BoardVo> list = boardService.search(inputData);
+	   return list;
    }
    
+   // 게시글 검색기능
    @RequestMapping(value = "/ajax/search", method = RequestMethod.POST)
    @ResponseBody
    public List<BoardVo> searchList(@RequestParam("searchData") String searchData) throws Exception {
@@ -206,13 +208,15 @@ public class BoardController {
 	   return list;
    }
    
-   // 게시판 페이징
-   @RequestMapping(value = "/board/page", method = RequestMethod.GET)
-   public void getListPage(Model model) throws Exception {
-	   List list = null; 
-	   list = service.list();
-	   model.addAttribute("list", list);   
-	  }
+//   // 게시판 페이징
+//   @RequestMapping(value = "/board/page", method = RequestMethod.GET)
+//   public void getListPage(Model model) throws Exception {
+//	   int count = boardService.listCnt();
+//	   
+//	   List list = null; 
+//	   list = service.list();
+//	   model.addAttribute("list", list);   
+//	  }
 }
 
 

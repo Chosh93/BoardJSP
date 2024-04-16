@@ -50,31 +50,18 @@
 </body>
 <script>
 $(document).ready(function(){
-	listCnt();
 	loadBoardList();
 })
-function listCnt() {
-	$.ajax({
-		type: 'GET',
-		url: '/ajax/listCnt',
-		dataType: 'json',
-		success: function(response){
-			console.log(response);
-			$(".list-cnt").text("총 "+response+"개");
-		},
-		error: function(xhr, status, error){
-			console.log(error);
-		}
-	})
-}
 
 function loadBoardList() {
     $.ajax({
-        type: 'GET',
-        url: '/ajax/list',
+        type: 'POST',
+        url: '/board/search/list',
+        data: {inputData: $(".input-search").val()},
         dataType: 'json',
         success: function(response) {
             updateBoardList(response);
+            $(".list-cnt").text("총 "+response.length+"개");
         },
         error: function(xhr, status, error) {
             console.error('게시판 목록 불러오기 실패:', error);
@@ -116,6 +103,7 @@ function search() {
         success: function(response) {
             console.log(response);
             updateBoardList(response);
+            $(".list-cnt").text("총 "+response.length+"개");
         },
         error: function(xhr, status, error) {
             console.log(error);

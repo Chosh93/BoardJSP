@@ -92,7 +92,7 @@
 		</select>
 		
 		<!-- 게시물 목록 + 페이징 -->
-		<select id="listPage" parameterType="hashMap" resultType="com.board.domain.BoardVO">
+		<select id="listPage" parameterType="hashMap" resultType="boardVO">
 			SELECT
 		 		BNUM, BTITLE, BWRITER, BDATE
 		 	FROM
