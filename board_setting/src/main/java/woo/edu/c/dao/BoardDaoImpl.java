@@ -58,15 +58,19 @@ public class BoardDaoImpl implements BoardDao {
 	}
 	
 	@Override
-	public List<BoardVo> search(String searchData){
-		return sql.selectList(namespace + ".search", searchData); 
+	public List<BoardVo> search(String searchData, int displayRow){
+		HashMap data = new HashMap();
+		data.put("searchData", searchData);
+		data.put("displayRow", displayRow);
+		return sql.selectList(namespace + ".search", data); 
 	}
 	
 	@Override
-	public List<BoardVo> listPage(int page) throws Exception {
+	public List<BoardVo> listPage(String searchData, int displayRow, int page) throws Exception {
 		HashMap data = new HashMap();
-		int startNum = (page-1)*10+1;
-		int endNum = page*10;
+		int startNum = (page-1)*displayRow+1;
+		int endNum = page*displayRow;
+		data.put("searchData", searchData);
 		data.put("startNum", startNum);
 		data.put("endNum", endNum);
 		return sql.selectList(namespace + ".listPage", data);

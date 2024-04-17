@@ -194,8 +194,7 @@ public class BoardController {
    // 게시판 검색페이지 게시글 불러오기
    @RequestMapping(value = "/board/search/list", method = RequestMethod.GET)
    @ResponseBody
-   public List getSearchBoard(@RequestParam("searchData") String searchData, @RequestParam("displayRow") int displayRow) throws Exception {
-	   System.out.println("searchData: " + searchData);
+   public List<Object> getSearchBoard(@RequestParam("searchData") String searchData, @RequestParam("displayRow") int displayRow) throws Exception {
 	   PageVo paging = new PageVo();
 	   
 	   int page = 1;
@@ -204,9 +203,32 @@ public class BoardController {
 	   paging.setPage(page);
 	   paging.setTotalCnt(totalCnt);
 	   paging.setDisplayRow(displayRow);
-	   System.out.println(paging);
-	   List<BoardVo> list = boardService.search(searchData);
-	   return list;
+
+	   List<BoardVo> list = boardService.search(searchData, displayRow);
+	   
+	   List<Object> result = new ArrayList<Object>();
+	   result.add(paging);
+	   result.add(list);
+	   return result;
+   }
+   
+   @RequestMapping(value = "/board/search/goToPage", method = RequestMethod.GET)
+   @ResponseBody
+   public List<Object> goToPage(@RequestParam("searchData") String searchData, @RequestParam("displayRow") int displayRow, @RequestParam("pageNum") int pageNum) throws Exception {
+	   PageVo paging = new PageVo();
+	   int page = pageNum;
+	   int totalCnt = boardService.listCnt(searchData);
+	   
+	   paging.setPage(page);
+	   paging.setTotalCnt(totalCnt);
+	   paging.setDisplayRow(displayRow);
+	   
+	   List<BoardVo> list = boardService.listPage(searchData, displayRow, page);
+	   
+	   List<Object> result = new ArrayList<Object>();
+	   result.add(paging);
+	   result.add(list);
+	   return result;
    }
 }
 

@@ -16,6 +16,7 @@ public class PageVo {
 	}
 	public void setPage(int page) {
 		this.page = page;
+		paging();
 	}
 	public int getTotalCnt() {
 		return totalCnt;

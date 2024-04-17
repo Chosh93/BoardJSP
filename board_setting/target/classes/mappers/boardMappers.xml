@@ -80,40 +80,43 @@
 		
 		<!-- 게시글 검색 + 가져오기 -->
 		<select id="search" resultType="boardVo">
-		    SELECT 
-		        BNUM,
-		        BTITLE,
-		        BWRITER,
-		        TO_CHAR(BDATE, 'yyyy-MM-dd HH24:mi:ss') AS BDATE
-		    FROM 
-		        TEST.BOARD
-		    WHERE
-		        IS_DEL = 'N'
-		    AND (
-		        BTITLE LIKE '%' || #{searchData} || '%'
-		        OR BWRITER LIKE '%' || #{searchData} || '%'
-		        OR BCONTENTS LIKE '%' || #{searchData} || '%'
-		    )
-		    ORDER BY BDATE DESC
+			SELECT 
+			    *
+			FROM (
+			    SELECT 
+			        ROW_NUMBER() OVER (ORDER BY BNUM DESC) AS ROW_NUM,
+			        TEST.BOARD.*
+			    FROM 
+			        TEST.BOARD 
+			    WHERE 
+			        IS_DEL = 'N'
+			    AND (
+			    BTITLE LIKE '%' || #{searchData} || '%'
+			    OR BWRITER LIKE '%' || #{searchData} || '%'
+			    OR BCONTENTS LIKE '%' || #{searchData} || '%'
+			    )
+			)
+			WHERE ROW_NUM BETWEEN 1 AND #{displayRow}
 		</select>
 
 		<!-- 게시물 목록 + 페이징 -->
 		<select id="listPage" parameterType="hashMap" resultType="boardVo">
 			SELECT 
-				*
-			FROM 
-				(
-					SELECT 
-						ROWNUM AS ROW_NUM,
-						TEST.BOARD.*
-					 FROM 
-					 	TEST.BOARD 
-					 WHERE 
-					 	IS_DEL = 'N'
-				)
-			WHERE 
-				ROW_NUM >= #{startNum} 
-			AND
-				ROW_NUM = #{endNum}
+			    *
+			FROM (
+			    SELECT 
+			        ROW_NUMBER() OVER (ORDER BY BNUM DESC) AS ROW_NUM,
+			        TEST.BOARD.*
+			    FROM 
+			        TEST.BOARD 
+			    WHERE 
+			        IS_DEL = 'N'
+			    AND (
+			    BTITLE LIKE '%' || #{searchData} || '%'
+			    OR BWRITER LIKE '%' || #{searchData} || '%'
+			    OR BCONTENTS LIKE '%' || #{searchData} || '%'
+			    )
+			)
+			WHERE ROW_NUM BETWEEN #{startNum} AND #{endNum}
 		</select>
 	</mapper>

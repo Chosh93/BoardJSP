@@ -64,12 +64,12 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	// 게시글 검색
-	public List<BoardVo> search(String searchData) throws Exception {
-		return boardDao.search(searchData);
+	public List<BoardVo> search(String searchData, int displayRow) throws Exception {
+		return boardDao.search(searchData, displayRow);
 	}
 	
 	// 게시물 페이징
-	public List<BoardVo> listPage(int page) throws Exception {
-		return boardDao.listPage(page);
+	public List<BoardVo> listPage(String searchData, int displayRow, int page) throws Exception {
+		return boardDao.listPage(searchData, displayRow, page);
 	}
 }

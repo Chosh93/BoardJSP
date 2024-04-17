@@ -16,12 +16,9 @@ a.board-title{
 }
 
 #boardTable td:nth-child(3) {
-    width: 40%
+    width: 30%
 }
 
-#boardTable td:nth-child(4) {
-    width: 20%;
-}
 #boardTable td:nth-child(4) {
     width: 20%;
 }

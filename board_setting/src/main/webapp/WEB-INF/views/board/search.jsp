@@ -11,6 +11,21 @@
    select{
        margin-left: 75%;
    }
+#boardTable td:nth-child(1) {
+    width: 10%;
+}
+
+#boardTable td:nth-child(2) {
+    width: 30%;
+}
+
+#boardTable td:nth-child(3) {
+    width: 10%
+}
+
+#boardTable td:nth-child(4) {
+    width: 30%;
+}
 </style>
 </head>
 <body>
@@ -35,17 +50,10 @@
 		<tbody id="boardBody">
 		</tbody>
     </table>
-    <button id="writeButton" onclick="showWrite()" type="button" class="btn btn-success" style="margin-bottom: 25px;">글쓰기</button>
-    <form onsubmit="return validateForm()" class="write-area" style="display: none;">
-       <label for="wtitle">제목</label><br>
-       <input type="text" id="wtitle" name="btitle" placeholder="제목을 입력하세요." style="width: 100%; margin-bottom: 15px;"><br>
-       <label for="writer">작성자</label><br>
-       <input type="text" id="writer" name="bwriter" placeholder="작성자를 입력하세요." style="width: 100%; margin-bottom: 15px;"><br>
-       <label for="wcontents">내용</label><br>
-       <textarea rows="10" type="text" id="wcontents" name="bcontents" placeholder="내용을 입력하세요." style="width: 100%; margin-bottom: 15px;"></textarea><br>
-       <button type="button" onclick="writeBoard()" class="btn btn-info">작성</button>
-   </form>
-   <div class="show-paging"></div>
+    <div class="show-paging" style="text-align: center;"></div>
+    
+    <button id="writeButton" onclick="location.href='/board/write' " type="button" class="btn btn-success" style="margin-bottom: 25px; float: left;">글쓰기</button>
+    <button id="search-reset" onclick="searchReset();" type="button" class="btn btn-success" style="margin-bottom: 25px; float: right;">목록보기</button>
 </div>
 </body>
 <script>
@@ -53,6 +61,8 @@ $(document).ready(function(){
 	loadBoardList();
 })
 
+var endPage;
+var beginPage;
 function loadBoardList() {
     $.ajax({
         type: 'GET',
@@ -61,9 +71,10 @@ function loadBoardList() {
             	displayRow: $(".page-select").val()
         },
         success: function(response) {
-            console.log(response);
-            $(".list-cnt").text("총 "+response.length+"개");
+            $(".list-cnt").text("총 "+response[0].totalCnt+"개");
             updateBoardList(response);
+            endPage = response[0].endPage;
+            beginPage = response[0].beginPage;
         },
         error: function(xhr, status, error) {
             console.error('게시판 목록 불러오기 실패:', error);
@@ -72,19 +83,65 @@ function loadBoardList() {
     });
 }
 
-function updateBoardList(boardList) {
+function updateBoardList(response) {
     var tableBody = $('#boardBody');
+    var pageBody = $('.show-paging');
+    var boardList = response[1];
+    var paging = response[0];
     tableBody.empty();
+    pageBody.empty();
     $.each(boardList, function(index, board) {
     	var row = $('<tr>');
         row.append('<td>' + board.bnum + '</td>');
-        row.append('<td><a class="board-title" data-bnum="' + board.bnum + '">' + board.btitle + '</a></td>');
+        row.append('<td><a class="board-title" href="/board/detail?bnum=' + board.bnum + '">' + board.btitle + '</a></td>');
         row.append('<td>' + board.bwriter + '</td>');
         row.append('<td>' + formatDate(board.bdate) + '</td>');
         tableBody.append(row);
     });
+    var pagingHTML = '<ul class="pagination">';
+    pagingHTML += '<li class="page-item ' + (!paging.prev ? 'disabled' : '') + '"><a class="page-link" onclick="' + (paging.prev ? 'goToPrev()' : 'return false;') + '">이전</a></li>';
+
+    for (var i = paging.beginPage; i <= paging.endPage; i++) {
+        pagingHTML += '<li class="page-item ' + (i === paging.page ? 'active' : '') + '"><a class="page-link" onclick="goToPage(' + i + ')">' + i + '</a></li>';
+    }
+
+    pagingHTML += '<li class="page-item ' + (!paging.next ? 'disabled' : '') + '"><a class="page-link" onclick="' + (paging.next ? 'goToNext()' : 'return false;') + '">다음</a></li>';
+    pagingHTML += '</ul>';
+
+    pageBody.html(pagingHTML);
 }
 
+function goToPage(pageNum) {
+	$.ajax({
+        type: 'GET',
+        url: '/board/search/goToPage',
+        data: { searchData: $(".input-search").val(),
+            	displayRow: $(".page-select").val(),
+            	pageNum: pageNum
+        },
+        success: function(response) {
+            updateBoardList(response);
+            endPage = response[0].endPage;
+            beginPage = response[0].beginPage;
+        },
+        error: function(xhr, status, error) {
+            console.error('게시판 목록 불러오기 실패:', error);
+            alert('게시판 목록을 불러오는데 실패했습니다.');
+        }
+    });
+}
+function goToNext(){
+	goToPage(endPage+1);
+}
+
+function goToPrev(){
+	goToPage(beginPage-1);
+}
+
+function searchReset(){
+	$(".input-search").val("");
+	loadBoardList();
+}
 //날짜 포맷
 function formatDate(dateString) {
     var date = new Date(dateString);
@@ -96,6 +153,5 @@ function formatDate(dateString) {
     var seconds = ("0" + date.getSeconds()).slice(-2);
     return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
 }
-
 </script>
 </html>
